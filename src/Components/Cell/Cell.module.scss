@@ -1,0 +1,43 @@
+@import 'globalStyle';
+
+.cell {
+  width: $cellSize;
+  height: $cellSize;
+  border-radius: $cellSize * 0.1;
+  border: 1px solid rgba($dark-gray, 0.1);
+
+  transition: transform 0.2s;
+
+  @each $name, $value in $cell-colors {
+    &.#{$name} {
+      &.on {
+        background-color: $value;
+      }
+    }
+  }
+  &.play {
+    transform: scale(1.2);
+    transition: transform 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  &:hover {
+    transform: scale(1.1);
+  }
+  &:focus {
+    // transform: scale(1.1);
+    border-width: 2px;
+    outline: none;
+    &:not(:focus-visible) {
+      border-width: 1px;
+    }
+  }
+
+  &:focus-visible {
+    transform: scale(1.1);
+    border-width: 2px;
+    outline: none;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
