@@ -1,7 +1,9 @@
 module.exports = {
-  plugins: () => [
-    require('postcss-preset-env')({
-      autoprefixer: true
-    })
-  ]
+  plugins: {
+    'postcss-normalize': {},
+    'postcss-preset-env': {
+      autoprefixer: true,
+      stage: 3
+    }
+  }
 };
