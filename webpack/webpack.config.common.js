@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const rootDir = process.cwd();
 
 module.exports = {
   entry: { index: './src/index.tsx' },
@@ -24,7 +25,10 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      globalStyle: path.resolve(rootDir, 'src/styles/global.scss')
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -32,3 +36,5 @@ module.exports = {
     })
   ]
 };
+
+console.log(path.resolve());
