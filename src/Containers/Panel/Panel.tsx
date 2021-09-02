@@ -21,31 +21,39 @@ export default function Panel({}: Props): ReactElement {
     setMusic(newMusic);
   }, []);
 
-  const overHandler: React.MouseEventHandler<HTMLDivElement> = useCallback(
+  const toggleHandler: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
       const target = e.target as ElementWithDataSet;
       const row = +target.dataset.posRow;
       const col = +target.dataset.posCol;
-      if (e.buttons === 1 && target.matches('[data-pos-row]')) {
+      if ((e.type === 'click' || e.buttons === 1) && target.matches('[data-pos-row]')) {
         toggleCell([row, col], !startCell);
+        if (e.type === 'click' && e.detail === 0) {
+          setStartCell(!startCell);
+        }
       }
     },
     [startCell]
   );
-
-  const downHandler = useCallback(
-    e => {
-      const target = e.target as ElementWithDataSet;
-      if (!target.matches('[data-pos-row]')) return;
-      const row = +target.dataset.posRow;
-      const col = +target.dataset.posCol;
-      setStartCell(!!music[row].notes[col]);
-    },
-    [music]
-  );
+  const setStartHandler = useCallback<
+    React.MouseEventHandler<HTMLDivElement> | React.FocusEventHandler<HTMLDivElement>
+  >((e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.FocusEvent<HTMLDivElement>) => {
+    const target = e.target as ElementWithDataSet;
+    if (!target.matches('[data-pos-row]')) return;
+    const row = +target.dataset.posRow;
+    const col = +target.dataset.posCol;
+    setStartCell(!!music[row].notes[col]);
+  }, []);
 
   return (
-    <section className={styles.panel} onMouseOver={overHandler} onMouseDown={downHandler}>
+    <section
+      className={styles.panel}
+      onMouseOver={toggleHandler}
+      onMouseOut={toggleHandler}
+      onClick={toggleHandler}
+      onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
+      onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
+    >
       {music.map(({ notes, inst }, rowIndex) => (
         <div key={inst} className={styles.panelLine}>
           {notes.map((note, colIndex) => (

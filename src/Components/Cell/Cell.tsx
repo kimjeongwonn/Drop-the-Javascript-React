@@ -23,11 +23,11 @@ interface Props {
 
 export default function Cell({ color, play, on, pos }: Props): React.ReactElement {
   return (
-    <div
+    <button
       className={cn(styles.cell, styles[color], play ? styles.play : null, on ? styles.on : null)}
       tabIndex={0}
       data-pos-row={pos[0]}
       data-pos-col={pos[1]}
-    ></div>
+    ></button>
   );
 }

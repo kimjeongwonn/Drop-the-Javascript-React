@@ -3,10 +3,13 @@
 .cell {
   width: $cellSize;
   height: $cellSize;
+  appearance: none;
   border-radius: $cellSize * 0.1;
   border: 1px solid rgba($dark-gray, 0.1);
+  background: none;
 
-  transition: transform 0.2s;
+  transition: transform 0.2s, background-color 0.1s;
+  user-select: none;
 
   @each $name, $value in $cell-colors {
     &.#{$name} {
