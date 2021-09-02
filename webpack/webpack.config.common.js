@@ -27,7 +27,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      globalStyle: path.resolve(rootDir, 'src/styles/global.scss')
+      defaultStyles: path.resolve(rootDir, 'src/styles/module')
     }
   },
   plugins: [
