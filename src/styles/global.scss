@@ -1,3 +1,4 @@
-@import './module/utils';
-@import './module/variables';
-@import './module/mixins';
+@import-normalize;
+* {
+  box-sizing: border-box;
+}
