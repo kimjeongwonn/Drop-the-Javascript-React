@@ -1,8 +1,10 @@
 import React, { ReactElement } from 'react';
-import './App.scss';
+import Panel from '../Containers/Panel/Panel';
 
-interface Props {}
-
-export default function App({}: Props): ReactElement {
-  return <div>React</div>;
+export default function App(): ReactElement {
+  return (
+    <>
+      <Panel />
+    </>
+  );
 }

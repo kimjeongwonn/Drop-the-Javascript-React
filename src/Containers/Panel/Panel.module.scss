@@ -1,0 +1,16 @@
+@use 'sass:math';
+@import 'defaultStyles';
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: math.div($cellSize, 5);
+}
+
+.panelLine {
+  display: flex;
+  gap: math.div($cellSize, 5);
+  > div:nth-child(4n):not(:last-child) {
+    margin-right: math.div($cellSize, 5);
+  }
+}
