@@ -1,6 +1,7 @@
-import React from 'react';
-import style from './Cell.module.scss';
+import React, { useCallback } from 'react';
+import styles from './Cell.module.scss';
 import cn from 'classnames';
+import { useMusic } from '../../Contexts/MusicContext';
 
 export type cellColors =
   | 'red'
@@ -17,13 +18,16 @@ interface Props {
   color: cellColors;
   play?: boolean;
   on?: boolean;
+  pos: [number, number];
 }
 
-export default function Cell({ color, play, on }: Props): React.ReactElement {
+export default function Cell({ color, play, on, pos }: Props): React.ReactElement {
   return (
     <div
-      className={cn(style.cell, style[color], play ? style.play : null, on ? style.on : null)}
+      className={cn(styles.cell, styles[color], play ? styles.play : null, on ? styles.on : null)}
       tabIndex={0}
+      data-pos-row={pos[0]}
+      data-pos-col={pos[1]}
     ></div>
   );
 }
