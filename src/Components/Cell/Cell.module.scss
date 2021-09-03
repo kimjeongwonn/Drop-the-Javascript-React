@@ -34,7 +34,7 @@
     }
   }
   &.play {
-    animation: hit 0.6s cubic-bezier(0.075, 0.82, 0.165, 1) normal both;
+    animation: hit 0.3s cubic-bezier(0.2, 1.07, 0.6, 0.98) normal both;
   }
   &:hover {
     transform: scale(1.1);
