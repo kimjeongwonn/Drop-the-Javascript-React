@@ -1,30 +1,11 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import Panel from '../Containers/Panel/Panel';
 import { useMusic } from '../Contexts/MusicContext';
+import usePlay from '../Hook/usePlay';
 
 export default function App(): ReactElement {
-  const timerId = useRef<number>();
-  const { playing, beat, setPlaying } = useMusic();
-  const [playingCol, setPlayingCol] = useState<number>();
-
-  useEffect(() => {
-    if (!playing) {
-      window.clearTimeout(timerId.current);
-      setPlayingCol(0);
-    }
-    if (playing) {
-      timerId.current = window.setTimeout(() => {
-        console.log('interval');
-
-        setPlayingCol((playingCol + 1) % beat);
-      }, 250);
-    }
-
-    return () => {
-      window.clearTimeout(timerId.current);
-    };
-  }, [playing, playingCol]);
-
+  const { playing, setPlaying } = useMusic();
+  const playingCol = usePlay();
   return (
     <>
       <button onClick={() => setPlaying(!playing)}>dd</button>
