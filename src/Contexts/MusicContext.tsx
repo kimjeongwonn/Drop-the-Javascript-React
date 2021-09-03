@@ -9,7 +9,7 @@ const instSet = {
   drum: 'null',
   'side-stick': 'null',
   cymbal: 'null',
-  'opened-hiht': 'null',
+  'opened-hihat': 'null',
   clap: 'null',
   'closed-hihat': 'null',
   ride: 'null',
@@ -45,13 +45,13 @@ interface MusicContextProps {
 export default function MusicProvider({ children }: Props): ReactElement {
   const [music, setMusic] = useState<MusicProps[]>(() => {
     return [
-      { inst: 'drum', notes: new Array(16).fill(false), active: true },
+      { inst: 'drum', notes: new Array(16).fill(false) },
       { inst: 'cymbal', notes: new Array(16).fill(false) },
       { inst: 'high-tom', notes: new Array(16).fill(false) },
-      { inst: 'opened-hiht', notes: new Array(16).fill(false) }
+      { inst: 'opened-hihat', notes: new Array(16).fill(false) }
     ];
   });
-  const [bpm, setBpm] = useState<number>(0);
+  const [bpm, setBpm] = useState<number>(150);
   const [playing, setPlaying] = useState<boolean>(false);
   const [beat, setBeat] = useState<number>(16);
 
