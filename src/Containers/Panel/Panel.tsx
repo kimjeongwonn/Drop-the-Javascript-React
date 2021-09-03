@@ -3,14 +3,16 @@ import styles from './Panel.module.scss';
 import { useMusic } from '../../Contexts/MusicContext';
 import Cell from '../../Components/Cell/Cell';
 
-interface Props {}
+interface Props {
+  playingCol?: number;
+}
 interface ElementWithDataSet extends Element {
   dataset: {
     [key: string]: string;
   };
 }
 
-export default function Panel({}: Props): ReactElement {
+export default function Panel({ playingCol }: Props): ReactElement {
   const { music, setMusic } = useMusic();
   const [startCell, setStartCell] = useState<boolean>(false);
 
@@ -57,7 +59,13 @@ export default function Panel({}: Props): ReactElement {
       {music.map(({ notes, inst }, rowIndex) => (
         <div key={inst} className={styles.panelLine}>
           {notes.map((note, colIndex) => (
-            <Cell key={colIndex} color='blue' on={note} pos={[rowIndex, colIndex]} />
+            <Cell
+              key={colIndex}
+              color='blue'
+              on={note}
+              pos={[rowIndex, colIndex]}
+              play={playingCol === colIndex}
+            />
           ))}
         </div>
       ))}
