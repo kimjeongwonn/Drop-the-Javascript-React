@@ -3,8 +3,6 @@ import React, { ReactElement } from 'react';
 
 const MusicContext = createContext(null);
 
-export const audioContext = new window.AudioContext();
-
 const instSet = {
   drum: 'null',
   'side-stick': 'null',
