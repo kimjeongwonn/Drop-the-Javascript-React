@@ -8,4 +8,8 @@ declare module '*.module.scss' {
   export default classes;
 }
 
-declare module '*.svg';
+declare module '*.svg' {
+  const url: string;
+  export const ReactComponent: React.ReactElement;
+  export default url;
+}
