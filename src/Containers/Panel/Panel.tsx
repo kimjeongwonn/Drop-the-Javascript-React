@@ -12,16 +12,19 @@ interface ElementWithDataSet extends Element {
 }
 
 export default function Panel({}: Props): ReactElement {
-  const { music, setMusic, playing, setPlaying } = useMusic();
+  const { music, setMusic, playing, beat } = useMusic();
   const [startCell, setStartCell] = useState<boolean>(false);
   const playingCol = usePlay();
 
-  const toggleCell = useCallback((pos, force?) => {
-    const newMusic = [...music];
+  const toggleCell = useCallback(
+    (pos, force?) => {
+      const newMusic = [...music];
 
-    newMusic[pos[0]].notes[pos[1]] = force ?? !newMusic[pos[0]].notes[pos[1]];
-    setMusic(newMusic);
-  }, []);
+      newMusic[pos[0]].notes[pos[1]] = force ?? !newMusic[pos[0]].notes[pos[1]];
+      setMusic(newMusic);
+    },
+    [beat]
+  );
 
   const toggleHandler: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
@@ -35,17 +38,20 @@ export default function Panel({}: Props): ReactElement {
         }
       }
     },
-    [startCell]
+    [startCell, beat]
   );
   const setStartHandler = useCallback<
     React.MouseEventHandler<HTMLDivElement> | React.FocusEventHandler<HTMLDivElement>
-  >((e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.FocusEvent<HTMLDivElement>) => {
-    const target = e.target as ElementWithDataSet;
-    if (!target.matches('[data-pos-row]')) return;
-    const row = +target.dataset.posRow;
-    const col = +target.dataset.posCol;
-    setStartCell(!!music[row].notes[col]);
-  }, []);
+  >(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.FocusEvent<HTMLDivElement>) => {
+      const target = e.target as ElementWithDataSet;
+      if (!target.matches('[data-pos-row]')) return;
+      const row = +target.dataset.posRow;
+      const col = +target.dataset.posCol;
+      setStartCell(!!music[row].notes[col]);
+    },
+    [beat]
+  );
 
   return (
     <section className={styles.container}>

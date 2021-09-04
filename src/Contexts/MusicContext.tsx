@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import React, { ReactElement } from 'react';
 
 const MusicContext = createContext(null);
@@ -37,7 +37,7 @@ interface MusicContextProps {
   playing: boolean;
   setPlaying: SetStateType<boolean>;
   beat: number;
-  setBeat: SetStateType<number>;
+  changeBeat: (newBeat: number) => void;
 }
 
 export default function MusicProvider({ children }: Props): ReactElement {
@@ -52,7 +52,29 @@ export default function MusicProvider({ children }: Props): ReactElement {
   const [bpm, setBpm] = useState<number>(150);
   const [playing, setPlaying] = useState<boolean>(false);
   const [beat, setBeat] = useState<number>(16);
-
+  const changeBeat = useCallback(
+    newBeat => {
+      if (newBeat < beat) {
+        setMusic(
+          music.map(row => {
+            return { ...row, notes: [...row.notes].slice(0, newBeat) };
+          })
+        );
+      }
+      if (newBeat > beat) {
+        setMusic(
+          music.map(row => {
+            return { ...row, notes: [...row.notes, ...new Array(newBeat - beat).fill(false)] };
+          })
+        );
+      }
+      if (newBeat === beat) {
+        return;
+      }
+      setBeat(newBeat);
+    },
+    [beat]
+  );
   const contextValue = useMemo(
     () => ({
       music,
@@ -62,9 +84,9 @@ export default function MusicProvider({ children }: Props): ReactElement {
       playing,
       setPlaying,
       beat,
-      setBeat
+      changeBeat
     }),
-    [music, bpm, playing]
+    [music, bpm, playing, beat]
   );
   return <MusicContext.Provider value={contextValue}>{children}</MusicContext.Provider>;
 }

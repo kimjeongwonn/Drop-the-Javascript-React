@@ -20,7 +20,7 @@ export default function usePlay(callback?: (playingCol: number) => void) {
     return () => {
       window.clearTimeout(timerId.current);
     };
-  }, [playing, playingCol, bpm]);
+  }, [playing, playingCol, bpm, beat]);
 
   return playingCol;
 }
