@@ -2,19 +2,19 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import styles from './Panel.module.scss';
 import { useMusic } from '../../Contexts/MusicContext';
 import Cell from '../../Components/Cell/Cell';
+import usePlay from '../../Hook/usePlay';
 
-interface Props {
-  playingCol?: number;
-}
+interface Props {}
 interface ElementWithDataSet extends Element {
   dataset: {
     [key: string]: string;
   };
 }
 
-export default function Panel({ playingCol }: Props): ReactElement {
-  const { music, setMusic } = useMusic();
+export default function Panel({}: Props): ReactElement {
+  const { music, setMusic, playing, setPlaying } = useMusic();
   const [startCell, setStartCell] = useState<boolean>(false);
+  const playingCol = usePlay();
 
   const toggleCell = useCallback((pos, force?) => {
     const newMusic = [...music];
@@ -48,27 +48,29 @@ export default function Panel({ playingCol }: Props): ReactElement {
   }, []);
 
   return (
-    <section
-      className={styles.panel}
-      onMouseOver={toggleHandler}
-      onMouseOut={toggleHandler}
-      onClick={toggleHandler}
-      onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
-      onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
-    >
-      {music.map(({ notes, inst }, rowIndex) => (
-        <div key={inst} className={styles.panelLine}>
-          {notes.map((note, colIndex) => (
-            <Cell
-              key={colIndex}
-              color='blue'
-              on={note}
-              pos={[rowIndex, colIndex]}
-              play={playingCol === colIndex}
-            />
-          ))}
-        </div>
-      ))}
+    <section className={styles.container}>
+      <div
+        className={styles.panel}
+        onMouseOver={toggleHandler}
+        onMouseOut={toggleHandler}
+        onClick={toggleHandler}
+        onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
+        onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
+      >
+        {music.map(({ notes, inst }, rowIndex) => (
+          <div role='grid' key={inst} className={styles.panelLine}>
+            {notes.map((note, colIndex) => (
+              <Cell
+                key={colIndex}
+                color='blue'
+                on={note}
+                pos={[rowIndex, colIndex]}
+                play={playing && playingCol === colIndex}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
