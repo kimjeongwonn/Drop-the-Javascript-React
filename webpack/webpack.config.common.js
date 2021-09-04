@@ -21,6 +21,14 @@ module.exports = {
         test: /\.tsx?$/i,
         exclude: /node_modules/,
         use: ['babel-loader', 'ts-loader']
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif)$/i,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.svg$/i,
+        use: ['@svgr/webpack', 'url-loader']
       }
     ]
   },
