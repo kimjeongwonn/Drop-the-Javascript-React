@@ -11,25 +11,26 @@ export default function usePlay() {
     const playingInst: (keyof InstType)[] = [];
     const ctx = audioContextRef.current;
     const gain = ctx.createGain();
-    gain.gain.value = 1;
-    gain.gain.automationRate;
+    gain.gain.value = 0.5;
+
     music.forEach(row => {
       if (row.notes[col]) {
         playingInst.push(row.inst);
       }
     });
+
     playingInst.forEach(inst => {
       const insts = instDataRef.current;
       const node = ctx.createBufferSource();
       node.buffer = insts[inst];
-      node.connect(ctx.destination);
+      node.connect(gain);
       node.start();
       node.onended = function () {
         this.stop();
-        console.log(this);
       };
     });
-    // gain.connect(ctx.destination);
+
+    gain.connect(ctx.destination);
   }
 
   useEffect(() => {
