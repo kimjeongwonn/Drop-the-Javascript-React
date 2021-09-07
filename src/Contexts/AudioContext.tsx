@@ -70,12 +70,6 @@ export default function AudioProvider({ children }: Props): ReactElement {
       const audioBufferList = await Promise.all<AudioBuffer>(
         arrayBufferList.map(a => audioContextRef.current.decodeAudioData(a))
       );
-      // const audioNodeList: AudioBufferSourceNode[] = audioBufferList.map(buffer => {
-      //   const node = audioContextRef.current.createBufferSource();
-      //   node.buffer = buffer;
-      //   node.connect(audioContextRef.current.destination);
-      //   return node;
-      // });
       audioBufferList.forEach(
         (value, index) =>
           (instDataRef.current[Object.keys(audiosFetch)[index] as keyof InstType] = value)
@@ -100,8 +94,4 @@ export function useAudio() {
   const context = useContext<AudioContextInterface>(AudioContext);
   if (!context) throw new Error('AudioContext의 Provider 내에서 사용해야 합니다!');
   return context;
-}
-
-export function playNode(node: AudioBufferSourceNode) {
-  // node.
 }
