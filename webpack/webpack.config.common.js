@@ -29,6 +29,10 @@ module.exports = {
       {
         test: /\.svg$/i,
         use: ['@svgr/webpack', 'url-loader']
+      },
+      {
+        test: /\.wav/i,
+        use: ['url-loader']
       }
     ]
   },
@@ -44,5 +48,3 @@ module.exports = {
     })
   ]
 };
-
-console.log(path.resolve());

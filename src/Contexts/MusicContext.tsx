@@ -1,37 +1,43 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import React, { ReactElement } from 'react';
+import React, {
+  createContext,
+  ReactElement,
+  useCallback,
+  useContext,
+  useMemo,
+  useState
+} from 'react';
 
-const MusicContext = createContext(null);
+const MusicContext = createContext<MusicContextInterface>(null);
 
-const instSet = {
-  drum: 'null',
-  'side-stick': 'null',
-  cymbal: 'null',
-  'opened-hihat': 'null',
-  clap: 'null',
-  'closed-hihat': 'null',
-  ride: 'null',
-  kick: 'null',
-  'high-tom': 'null',
-  'low-tom': 'null'
-};
+export interface InstType {
+  drum: null | AudioBuffer;
+  sideStick: null | AudioBuffer;
+  cymbal: null | AudioBuffer;
+  openedHihat: null | AudioBuffer;
+  clap: null | AudioBuffer;
+  closedHihat: null | AudioBuffer;
+  ride: null | AudioBuffer;
+  kick: null | AudioBuffer;
+  highTom: null | AudioBuffer;
+  lowTom: null | AudioBuffer;
+}
 
-type InstType = keyof typeof instSet;
+type InstSet = keyof InstType;
 
 interface Props {
   children: React.ReactNode;
 }
 
-interface MusicProps {
-  inst: InstType;
+interface MusicRow {
+  inst: InstSet;
   notes: boolean[];
 }
 
 type SetStateType<T> = React.Dispatch<React.SetStateAction<T>>;
 
-interface MusicContextProps {
-  music: MusicProps[];
-  setMusic: SetStateType<MusicProps[]>;
+interface MusicContextInterface {
+  music: MusicRow[];
+  setMusic: SetStateType<MusicRow[]>;
   bpm: number;
   setBpm: SetStateType<number>;
   playing: boolean;
@@ -41,17 +47,17 @@ interface MusicContextProps {
 }
 
 export default function MusicProvider({ children }: Props): ReactElement {
-  const [music, setMusic] = useState<MusicProps[]>(() => {
-    return [
-      { inst: 'drum', notes: new Array(16).fill(false) },
-      { inst: 'cymbal', notes: new Array(16).fill(false) },
-      { inst: 'high-tom', notes: new Array(16).fill(false) },
-      { inst: 'opened-hihat', notes: new Array(16).fill(false) }
-    ];
-  });
   const [bpm, setBpm] = useState<number>(150);
   const [playing, setPlaying] = useState<boolean>(false);
   const [beat, setBeat] = useState<number>(16);
+  const [music, setMusic] = useState<MusicRow[]>(() => {
+    return [
+      { inst: 'drum', notes: new Array(beat).fill(false) },
+      { inst: 'cymbal', notes: new Array(beat).fill(false) },
+      { inst: 'highTom', notes: new Array(beat).fill(false) },
+      { inst: 'openedHihat', notes: new Array(beat).fill(false) }
+    ];
+  });
   const changeBeat = useCallback(
     newBeat => {
       if (newBeat < beat) {
@@ -75,7 +81,7 @@ export default function MusicProvider({ children }: Props): ReactElement {
     },
     [beat]
   );
-  const contextValue = useMemo(
+  const contextValue = useMemo<MusicContextInterface>(
     () => ({
       music,
       setMusic,
@@ -92,7 +98,7 @@ export default function MusicProvider({ children }: Props): ReactElement {
 }
 
 export function useMusic() {
-  const context = useContext<MusicContextProps>(MusicContext);
-  if (!context) throw new Error();
+  const context = useContext<MusicContextInterface>(MusicContext);
+  if (!context) throw new Error('MusicContext의 Provider 내에서 사용해야 합니다!');
   return context;
 }
