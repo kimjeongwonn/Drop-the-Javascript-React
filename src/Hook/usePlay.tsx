@@ -7,6 +7,7 @@ export default function usePlay() {
   const { playing, beat, bpm, music } = useMusic();
   const { audioContextRef, instDataRef } = useAudio();
   const [playingCol, setPlayingCol] = useState<number>(0);
+
   function playAudio(col: number) {
     const playingInst: (keyof InstType)[] = [];
     const ctx = audioContextRef.current;
@@ -27,6 +28,7 @@ export default function usePlay() {
       node.start();
       node.onended = function () {
         this.stop();
+        this.disconnect(gain);
       };
     });
 
@@ -48,7 +50,7 @@ export default function usePlay() {
     return () => {
       window.clearTimeout(timerId.current);
     };
-  }, [playing, playingCol, bpm, beat]);
+  }, [playing, playingCol]);
 
   return playingCol;
 }

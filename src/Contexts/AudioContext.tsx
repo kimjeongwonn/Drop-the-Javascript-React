@@ -1,12 +1,5 @@
-import React, {
-  createContext,
-  ReactElement,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { createContext, ReactElement, useContext, useEffect, useMemo, useRef } from 'react';
+
 import clap from '../Assets/Sound/clap.wav';
 import closedHihat from '../Assets/Sound/closed-hihat.wav';
 import cymbal from '../Assets/Sound/cymbal.wav';
@@ -17,7 +10,7 @@ import lowTom from '../Assets/Sound/low-tom.wav';
 import openedHihat from '../Assets/Sound/opened-hihat.wav';
 import ride from '../Assets/Sound/ride.wav';
 import sidestick from '../Assets/Sound/sidestick.wav';
-import { InstType, useMusic } from './MusicContext';
+import { InstType } from './MusicContext';
 
 const audiosFetch = {
   clap: fetch(clap),
@@ -60,7 +53,6 @@ export default function AudioProvider({ children }: Props): ReactElement {
   const audioContextRef = useRef<AudioContext>(null);
 
   useEffect(() => {
-    if (audioContextRef.current) return;
     // @ts-ignore
     audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
 
