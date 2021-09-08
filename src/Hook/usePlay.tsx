@@ -15,7 +15,7 @@ export default function usePlay() {
     gain.gain.value = 0.5;
 
     music.forEach(row => {
-      if (row.notes[col]) {
+      if (row.show && row.notes[col]) {
         playingInst.push(row.inst);
       }
     });

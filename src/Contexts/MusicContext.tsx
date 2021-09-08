@@ -42,6 +42,7 @@ interface Props {
 interface MusicRow {
   inst: InstSet;
   notes: boolean[];
+  show: boolean;
 }
 
 export type SetStateType<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -54,7 +55,7 @@ interface MusicContextInterface {
   playing: boolean;
   setPlaying: SetStateType<boolean>;
   beat: number;
-  changeBeat: (newBeat: number) => void;
+  setBeat: SetStateType<number>;
   icons: InstIcon;
 }
 
@@ -76,41 +77,18 @@ export default function MusicProvider({ children }: Props): ReactElement {
   const [beat, setBeat] = useState<number>(16);
   const [music, setMusic] = useState<MusicRow[]>(() => {
     return [
-      { inst: 'drum', notes: new Array(beat).fill(false) },
-      { inst: 'sideStick', notes: new Array(beat).fill(false) },
-      { inst: 'cymbal', notes: new Array(beat).fill(false) },
-      { inst: 'openedHihat', notes: new Array(beat).fill(false) },
-      { inst: 'clap', notes: new Array(beat).fill(false) },
-      { inst: 'closedHihat', notes: new Array(beat).fill(false) },
-      { inst: 'ride', notes: new Array(beat).fill(false) },
-      { inst: 'kick', notes: new Array(beat).fill(false) },
-      { inst: 'highTom', notes: new Array(beat).fill(false) },
-      { inst: 'lowTom', notes: new Array(beat).fill(false) }
+      { inst: 'drum', notes: new Array(beat).fill(false), show: true },
+      { inst: 'sideStick', notes: new Array(beat).fill(false), show: true },
+      { inst: 'cymbal', notes: new Array(beat).fill(false), show: true },
+      { inst: 'openedHihat', notes: new Array(beat).fill(false), show: true },
+      { inst: 'clap', notes: new Array(beat).fill(false), show: false },
+      { inst: 'closedHihat', notes: new Array(beat).fill(false), show: false },
+      { inst: 'ride', notes: new Array(beat).fill(false), show: false },
+      { inst: 'kick', notes: new Array(beat).fill(false), show: false },
+      { inst: 'highTom', notes: new Array(beat).fill(false), show: false },
+      { inst: 'lowTom', notes: new Array(beat).fill(false), show: false }
     ];
   });
-  const changeBeat = useCallback(
-    newBeat => {
-      if (newBeat < beat) {
-        setMusic(
-          music.map(row => {
-            return { ...row, notes: [...row.notes].slice(0, newBeat) };
-          })
-        );
-      }
-      if (newBeat > beat) {
-        setMusic(
-          music.map(row => {
-            return { ...row, notes: [...row.notes, ...new Array(newBeat - beat).fill(false)] };
-          })
-        );
-      }
-      if (newBeat === beat) {
-        return;
-      }
-      setBeat(newBeat);
-    },
-    [beat]
-  );
   const contextValue = useMemo<MusicContextInterface>(
     () => ({
       music,
@@ -120,7 +98,7 @@ export default function MusicProvider({ children }: Props): ReactElement {
       playing,
       setPlaying,
       beat,
-      changeBeat,
+      setBeat,
       icons
     }),
     [music, bpm, playing, beat]

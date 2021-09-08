@@ -78,15 +78,15 @@ export default function Panel({}: Props): ReactElement {
         onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
         onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
       >
-        {music.map(({ notes, inst }, rowIndex) => {
+        {music.map(({ notes, inst, show }, rowIndex) => {
           const SvgIcon = icons[inst];
-          return (
+          return show ? (
             <div role='grid' key={inst} className={styles.panelLine}>
               <SvgIcon
                 className={cn(styles.svgIcon, styles[INST_COLORS[rowIndex]])}
                 viewBox='0 0 45 45'
               />
-              {notes.map((note, colIndex) => (
+              {notes.slice(0, beat).map((note, colIndex) => (
                 <Cell
                   key={colIndex}
                   color={INST_COLORS[rowIndex]}
@@ -96,7 +96,7 @@ export default function Panel({}: Props): ReactElement {
                 />
               ))}
             </div>
-          );
+          ) : null;
         })}
 
         <div role='grid' className={styles.panelLine}>
