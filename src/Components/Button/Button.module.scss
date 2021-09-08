@@ -1,0 +1,32 @@
+@import 'defaultStyles';
+
+.button {
+  background-color: $primary-yellow;
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.2s;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+  &.sm {
+    width: 40px;
+    height: 40px;
+  }
+  &.md {
+    width: 75px;
+    height: 75px;
+  }
+  &.lg {
+    width: 100px;
+    height: 100px;
+  }
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+  &:active {
+    transform: scale(0.9);
+  }
+}
