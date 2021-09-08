@@ -1,8 +1,23 @@
+import cn from 'classnames';
 import React, { ReactElement, useCallback, useState } from 'react';
-import styles from './Panel.module.scss';
+import Cell, { cellColors } from '../../Components/Cell/Cell';
 import { useMusic } from '../../Contexts/MusicContext';
-import Cell from '../../Components/Cell/Cell';
 import usePlay from '../../Hook/usePlay';
+import styles from './Panel.module.scss';
+import { ReactComponent as AdjustSvg } from '../../Assets/Image/adjust_icon.svg';
+
+const INST_COLORS: cellColors[] = [
+  'red',
+  'orange',
+  'yellow',
+  'lightgreen',
+  'green',
+  'jade',
+  'skyblue',
+  'blue',
+  'plum',
+  'purple'
+];
 
 interface Props {}
 interface ElementWithDataSet extends Element {
@@ -12,7 +27,7 @@ interface ElementWithDataSet extends Element {
 }
 
 export default function Panel({}: Props): ReactElement {
-  const { music, setMusic, playing, beat } = useMusic();
+  const { music, setMusic, playing, beat, icons } = useMusic();
   const [startCell, setStartCell] = useState<boolean>(false);
   const playingCol = usePlay();
 
@@ -63,19 +78,35 @@ export default function Panel({}: Props): ReactElement {
         onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
         onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
       >
-        {music.map(({ notes, inst }, rowIndex) => (
-          <div role='grid' key={inst} className={styles.panelLine}>
-            {notes.map((note, colIndex) => (
-              <Cell
-                key={colIndex}
-                color='blue'
-                on={note}
-                pos={[rowIndex, colIndex]}
-                play={playing && playingCol === colIndex}
+        {music.map(({ notes, inst }, rowIndex) => {
+          const SvgIcon = icons[inst];
+          return (
+            <div role='grid' key={inst} className={styles.panelLine}>
+              <SvgIcon
+                className={cn(styles.svgIcon, styles[INST_COLORS[rowIndex]])}
+                viewBox='0 0 45 45'
               />
-            ))}
-          </div>
-        ))}
+              {notes.map((note, colIndex) => (
+                <Cell
+                  key={colIndex}
+                  color={INST_COLORS[rowIndex]}
+                  on={note}
+                  pos={[rowIndex, colIndex]}
+                  play={playing && playingCol === colIndex}
+                />
+              ))}
+            </div>
+          );
+        })}
+
+        <div role='grid' className={styles.panelLine}>
+          <AdjustSvg
+            className={styles.svgIcon}
+            style={{ cursor: 'pointer' }}
+            viewBox='0 0 50 50'
+            // onClick={}
+          />
+        </div>
       </div>
     </section>
   );
