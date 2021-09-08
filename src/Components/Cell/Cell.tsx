@@ -1,7 +1,6 @@
-import React, { useCallback } from 'react';
-import styles from './Cell.module.scss';
 import cn from 'classnames';
-import { useMusic } from '../../Contexts/MusicContext';
+import React from 'react';
+import styles from './Cell.module.scss';
 
 export type cellColors =
   | 'red'
@@ -12,7 +11,8 @@ export type cellColors =
   | 'jade'
   | 'skyblue'
   | 'blue'
-  | 'plum';
+  | 'plum'
+  | 'purple';
 
 interface Props {
   color: cellColors;

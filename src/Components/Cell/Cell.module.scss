@@ -6,7 +6,7 @@
     transform: scale(1);
   }
   50% {
-    filter: brightness(2);
+    filter: brightness(1.2);
     transform: scale(1.15);
   }
   100% {
@@ -20,7 +20,7 @@
   height: $cellSize;
   appearance: none;
   border-radius: $cellSize * 0.1;
-  border: 1px solid rgba($dark-gray, 0.1);
+  border: 1px solid rgba($dark-gray, 0.3);
   background: none;
 
   transition: transform 0.2s, background-color 0.1s;
@@ -42,15 +42,17 @@
   &:focus {
     // transform: scale(1.1);
     border-width: 2px;
+    border-color: rgba($dark-gray, 0.5);
     outline: none;
     &:not(:focus-visible) {
-      border-width: 1px;
+      border: 1px solid rgba($dark-gray, 0.3);
     }
   }
 
   &:focus-visible {
     transform: scale(1.1);
     border-width: 2px;
+    border-color: rgba($dark-gray, 0.5);
     outline: none;
   }
 
