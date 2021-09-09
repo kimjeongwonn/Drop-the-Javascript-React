@@ -1,14 +1,7 @@
-import React, {
-  createContext,
-  ReactElement,
-  useCallback,
-  useContext,
-  useMemo,
-  useState
-} from 'react';
+import React, { createContext, ReactElement, useContext, useMemo, useState } from 'react';
 import { ReactComponent as ClapIcon } from '../Assets/Image/clap_icon.svg';
-import { ReactComponent as CymbalIcon } from '../Assets/Image/cymbal_icon.svg';
 import { ReactComponent as ClosedHihatIcon } from '../Assets/Image/closed_hihat_icon.svg';
+import { ReactComponent as CymbalIcon } from '../Assets/Image/cymbal_icon.svg';
 import { ReactComponent as DrumIcon } from '../Assets/Image/drum_icon.svg';
 import { ReactComponent as HightomIcon } from '../Assets/Image/hightom_icon.svg';
 import { ReactComponent as KickIcon } from '../Assets/Image/kick_icon.svg';
@@ -19,20 +12,19 @@ import { ReactComponent as SidestickIcon } from '../Assets/Image/sidestick_icon.
 
 const MusicContext = createContext<MusicContextInterface>(null);
 
-export interface InstType {
-  drum: null | AudioBuffer;
-  sideStick: null | AudioBuffer;
-  cymbal: null | AudioBuffer;
-  openedHihat: null | AudioBuffer;
-  clap: null | AudioBuffer;
-  closedHihat: null | AudioBuffer;
-  ride: null | AudioBuffer;
-  kick: null | AudioBuffer;
-  highTom: null | AudioBuffer;
-  lowTom: null | AudioBuffer;
-}
+export type InstName =
+  | 'drum'
+  | 'sideStick'
+  | 'cymbal'
+  | 'openedHihat'
+  | 'clap'
+  | 'closedHihat'
+  | 'ride'
+  | 'kick'
+  | 'highTom'
+  | 'lowTom';
 
-export type InstName = keyof InstType;
+export type InstType = Record<InstName, null | AudioBuffer>;
 export type InstIcon = Record<InstName, React.FC<React.SVGProps<SVGSVGElement>>>;
 
 interface Props {
