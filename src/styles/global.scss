@@ -1,7 +1,15 @@
 @import-normalize;
+@import 'defaultStyles';
 
 * {
   box-sizing: border-box;
+}
+
+:root {
+  --cell-size: #{$cellSize};
+  @include mobile {
+    --cell-size: #{$mobileCellSize};
+  }
 }
 
 body {

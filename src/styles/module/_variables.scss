@@ -22,7 +22,9 @@ $cell-colors: (
   'jade': $cell-jade,
   'skyblue': $cell-skyblue,
   'blue': $cell-blue,
-  'plum': $cell-plum
+  'plum': $cell-plum,
+  'purple': $cell-purple
 );
 
 $cellSize: 35px;
+$mobileCellSize: 28px;

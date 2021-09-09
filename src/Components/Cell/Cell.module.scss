@@ -16,15 +16,17 @@
 }
 
 .cell {
-  width: $cellSize;
-  height: $cellSize;
+  width: var(--cell-size);
+  height: var(--cell-size);
   appearance: none;
-  border-radius: $cellSize * 0.1;
+  border-radius: calc(var(--cell-size) * 0.1);
   border: 1px solid rgba($dark-gray, 0.3);
   background: none;
 
   transition: transform 0.2s, background-color 0.1s;
   user-select: none;
+
+  cursor: pointer;
 
   @each $name, $value in $cell-colors {
     &.#{$name} {
