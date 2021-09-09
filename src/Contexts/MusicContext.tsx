@@ -32,15 +32,15 @@ export interface InstType {
   lowTom: null | AudioBuffer;
 }
 
-type InstSet = keyof InstType;
-type InstIcon = Record<InstSet, React.FC<React.SVGProps<SVGSVGElement>>>;
+export type InstName = keyof InstType;
+export type InstIcon = Record<InstName, React.FC<React.SVGProps<SVGSVGElement>>>;
 
 interface Props {
   children: React.ReactNode;
 }
 
 interface MusicRow {
-  inst: InstSet;
+  inst: InstName;
   notes: boolean[];
   show: boolean;
 }
@@ -77,16 +77,16 @@ export default function MusicProvider({ children }: Props): ReactElement {
   const [beat, setBeat] = useState<number>(16);
   const [music, setMusic] = useState<MusicRow[]>(() => {
     return [
-      { inst: 'drum', notes: new Array(beat).fill(false), show: true },
-      { inst: 'sideStick', notes: new Array(beat).fill(false), show: true },
-      { inst: 'cymbal', notes: new Array(beat).fill(false), show: true },
-      { inst: 'openedHihat', notes: new Array(beat).fill(false), show: true },
-      { inst: 'clap', notes: new Array(beat).fill(false), show: false },
-      { inst: 'closedHihat', notes: new Array(beat).fill(false), show: false },
-      { inst: 'ride', notes: new Array(beat).fill(false), show: false },
-      { inst: 'kick', notes: new Array(beat).fill(false), show: false },
-      { inst: 'highTom', notes: new Array(beat).fill(false), show: false },
-      { inst: 'lowTom', notes: new Array(beat).fill(false), show: false }
+      { inst: 'drum', notes: new Array(32).fill(false), show: true },
+      { inst: 'sideStick', notes: new Array(32).fill(false), show: true },
+      { inst: 'cymbal', notes: new Array(32).fill(false), show: true },
+      { inst: 'openedHihat', notes: new Array(32).fill(false), show: true },
+      { inst: 'clap', notes: new Array(32).fill(false), show: false },
+      { inst: 'closedHihat', notes: new Array(32).fill(false), show: false },
+      { inst: 'ride', notes: new Array(32).fill(false), show: false },
+      { inst: 'kick', notes: new Array(32).fill(false), show: false },
+      { inst: 'highTom', notes: new Array(32).fill(false), show: false },
+      { inst: 'lowTom', notes: new Array(32).fill(false), show: false }
     ];
   });
   const contextValue = useMemo<MusicContextInterface>(
