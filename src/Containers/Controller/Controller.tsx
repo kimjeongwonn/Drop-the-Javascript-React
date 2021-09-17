@@ -15,9 +15,9 @@ export default function Controller(): ReactElement {
   const { setCurrentPage } = usePage();
 
   const togglePlaying = useCallback(() => {
-    // if (!playing) {
-    //   setCurrentPage(1);
-    // }
+    if (!playing) {
+      setCurrentPage(1);
+    }
     setPlaying(!playing);
   }, [playing]);
 
