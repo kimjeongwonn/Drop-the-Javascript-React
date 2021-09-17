@@ -1,4 +1,11 @@
-import React, { createContext, ReactElement, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { ReactComponent as ClapIcon } from '../Assets/Image/clap_icon.svg';
 import { ReactComponent as ClosedHihatIcon } from '../Assets/Image/closed_hihat_icon.svg';
 import { ReactComponent as CymbalIcon } from '../Assets/Image/cymbal_icon.svg';
@@ -64,23 +71,32 @@ export default function MusicProvider({ children }: Props): ReactElement {
     highTom: HightomIcon,
     lowTom: LowtomIcon
   };
-  const [bpm, setBpm] = useState<number>(150);
+  const [bpm, setBpm] = useState<number>(() => +(window.sessionStorage.getItem('bpm') ?? 150));
   const [playing, setPlaying] = useState<boolean>(false);
-  const [beat, setBeat] = useState<number>(16);
-  const [music, setMusic] = useState<MusicRow[]>(() => {
-    return [
-      { inst: 'drum', notes: new Array(32).fill(false), show: true },
-      { inst: 'sideStick', notes: new Array(32).fill(false), show: true },
-      { inst: 'cymbal', notes: new Array(32).fill(false), show: true },
-      { inst: 'openedHihat', notes: new Array(32).fill(false), show: true },
-      { inst: 'clap', notes: new Array(32).fill(false), show: false },
-      { inst: 'closedHihat', notes: new Array(32).fill(false), show: false },
-      { inst: 'ride', notes: new Array(32).fill(false), show: false },
-      { inst: 'kick', notes: new Array(32).fill(false), show: false },
-      { inst: 'highTom', notes: new Array(32).fill(false), show: false },
-      { inst: 'lowTom', notes: new Array(32).fill(false), show: false }
-    ];
+  const [beat, setBeat] = useState<number>(() => {
+    return +(
+      window.sessionStorage.getItem('beat') ??
+      (window.matchMedia('(max-width: 768px)').matches ? 8 : 16)
+    );
   });
+  const [music, setMusic] = useState<MusicRow[]>(() => {
+    const saved = JSON.parse(window.sessionStorage.getItem('music')) as MusicRow[];
+    return (
+      saved ?? [
+        { inst: 'drum', notes: new Array(32).fill(false), show: true },
+        { inst: 'sideStick', notes: new Array(32).fill(false), show: true },
+        { inst: 'cymbal', notes: new Array(32).fill(false), show: true },
+        { inst: 'openedHihat', notes: new Array(32).fill(false), show: true },
+        { inst: 'closedHihat', notes: new Array(32).fill(false), show: false },
+        { inst: 'ride', notes: new Array(32).fill(false), show: false },
+        { inst: 'kick', notes: new Array(32).fill(false), show: false },
+        { inst: 'highTom', notes: new Array(32).fill(false), show: false },
+        { inst: 'lowTom', notes: new Array(32).fill(false), show: false },
+        { inst: 'clap', notes: new Array(32).fill(false), show: false }
+      ]
+    );
+  });
+
   const contextValue = useMemo<MusicContextInterface>(
     () => ({
       music,
@@ -95,10 +111,15 @@ export default function MusicProvider({ children }: Props): ReactElement {
     }),
     [music, bpm, playing, beat]
   );
+  useEffect(() => {
+    window.sessionStorage.setItem('music', JSON.stringify(music));
+    window.sessionStorage.setItem('bpm', JSON.stringify(bpm));
+    window.sessionStorage.setItem('beat', JSON.stringify(beat));
+  }, [music, bpm, beat]);
   return <MusicContext.Provider value={contextValue}>{children}</MusicContext.Provider>;
 }
 
-export function useMusic() {
+export function useMusic(): MusicContextInterface {
   const context = useContext<MusicContextInterface>(MusicContext);
   if (!context) throw new Error('MusicContext의 Provider 내에서 사용해야 합니다!');
   return context;
