@@ -1,0 +1,33 @@
+@import 'defaultStyles';
+
+.controller {
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background-color: white;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 -10px 10px rgba(black, 0.1);
+  @include mobile {
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 180px;
+  }
+}
+
+.player {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
