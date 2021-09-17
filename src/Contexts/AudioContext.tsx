@@ -10,9 +10,9 @@ import lowTom from '../Assets/Sound/low-tom.wav';
 import openedHihat from '../Assets/Sound/opened-hihat.wav';
 import ride from '../Assets/Sound/ride.wav';
 import sidestick from '../Assets/Sound/sidestick.wav';
-import { InstType } from './MusicContext';
+import { InstName, InstType } from './MusicContext';
 
-const audiosFetch = {
+const audiosFetch: Record<InstName, Promise<Response>> = {
   clap: fetch(clap),
   closedHihat: fetch(closedHihat),
   cymbal: fetch(cymbal),
@@ -53,19 +53,24 @@ export default function AudioProvider({ children }: Props): ReactElement {
   const audioContextRef = useRef<AudioContext>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-
+    // console.log(audiosFetch);
     (async () => {
-      const list = await Promise.all(Object.values(audiosFetch));
-      const arrayBufferList = await Promise.all<ArrayBuffer>(list.map(r => r.arrayBuffer()));
-      const audioBufferList = await Promise.all<AudioBuffer>(
-        arrayBufferList.map(a => audioContextRef.current.decodeAudioData(a))
-      );
-      audioBufferList.forEach(
-        (value, index) =>
-          (instDataRef.current[Object.keys(audiosFetch)[index] as keyof InstType] = value)
-      );
+      try {
+        const list = await Promise.all(Object.values(audiosFetch));
+        const arrayBufferList = await Promise.all<ArrayBuffer>(list.map(r => r.arrayBuffer()));
+        const audioBufferList = await Promise.all<AudioBuffer>(
+          arrayBufferList.map(a => audioContextRef.current.decodeAudioData(a))
+        );
+        audioBufferList.forEach(
+          (value, index) =>
+            (instDataRef.current[Object.keys(audiosFetch)[index] as keyof InstType] = value)
+        );
+      } catch (e) {
+        console.error(e);
+      }
       // TODO: 로딩 끝
     })();
     // TODO: 에러처리 추가
@@ -82,7 +87,7 @@ export default function AudioProvider({ children }: Props): ReactElement {
   return <AudioContext.Provider value={audioContextValue}>{children}</AudioContext.Provider>;
 }
 
-export function useAudio() {
+export function useAudio(): AudioContextInterface {
   const context = useContext<AudioContextInterface>(AudioContext);
   if (!context) throw new Error('AudioContext의 Provider 내에서 사용해야 합니다!');
   return context;

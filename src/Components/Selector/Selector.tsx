@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import cn from 'classnames';
 import React, { ReactElement, useCallback } from 'react';
 import { SetStateType } from '../../Contexts/MusicContext';

@@ -5,12 +5,14 @@ import { useAudio } from '../Contexts/AudioContext';
 
 export default function App(): ReactElement {
   const { audioContextRef } = useAudio();
+
   useEffect(() => {
     window.addEventListener('click', function audioContextInit() {
       audioContextRef.current.resume();
       window.removeEventListener('click', audioContextInit);
     });
   });
+
   return (
     <>
       <Panel />

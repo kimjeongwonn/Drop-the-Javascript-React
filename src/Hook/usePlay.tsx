@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAudio } from '../Contexts/AudioContext';
 import { InstType, useMusic } from '../Contexts/MusicContext';
 
-export default function usePlay() {
+export default function usePlay(): number {
   const timerId = useRef<number>();
   const { playing, beat, bpm, music } = useMusic();
   const { audioContextRef, instDataRef } = useAudio();
