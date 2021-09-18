@@ -1,4 +1,12 @@
-import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import useMobile from '../Hook/useMobile';
 import { SetStateType, useMusic } from './MusicContext';
 
@@ -16,7 +24,7 @@ interface Props {
   children: ReactNode;
 }
 
-export default function PageProvider({ children }: Props) {
+export default function PageProvider({ children }: Props): ReactElement {
   const { beat } = useMusic();
   const isMobile = useMobile();
   const pageUnit = isMobile ? 8 : 16;
@@ -42,7 +50,7 @@ export default function PageProvider({ children }: Props) {
   return <PageContext.Provider value={contextValue}>{children}</PageContext.Provider>;
 }
 
-export function usePage() {
+export function usePage(): PageContextInterface {
   const context = useContext<PageContextInterface>(PageContext);
   if (!context) throw new Error('PageContext의 Provider 내에서 사용해야 합니다!');
   return context;

@@ -38,10 +38,11 @@ export default function Panel(): ReactElement {
   const playingCol = usePlay();
 
   useEffect(() => {
-    if (playingCol) {
-      setCurrentPage(~~(playingCol / pageUnit + 1));
+    if (playing) {
+      const willMovePage = ~~(playingCol / pageUnit) + 1;
+      setCurrentPage(willMovePage);
     }
-  }, [playingCol, pageUnit]);
+  }, [playing, playingCol, pageUnit]);
 
   useEffect(() => {
     if (openSelector) {

@@ -8,6 +8,7 @@
 }
 
 .panel {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: calc(var(--cell-size) * 0.2);
