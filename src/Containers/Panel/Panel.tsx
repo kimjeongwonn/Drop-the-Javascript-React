@@ -141,7 +141,7 @@ export default function Panel(): ReactElement {
         max={totalPage}
         step={1}
         valueState={currentPage}
-        onChange={setCurrentPage}
+        setValueState={setCurrentPage}
       />
       <div
         className={styles.panel}
