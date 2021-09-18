@@ -88,8 +88,9 @@ export default function Panel(): ReactElement {
         }
       }
     },
-    [startCell, music]
+    [music, pageUnit, currentPage]
   );
+
   const setStartHandler = useCallback<
     | React.MouseEventHandler<HTMLDivElement>
     | React.FocusEventHandler<HTMLDivElement>
@@ -105,9 +106,9 @@ export default function Panel(): ReactElement {
       if (!target.matches('[data-pos-row]')) return;
       const row = +target.dataset.posRow;
       const col = +target.dataset.posCol + pageUnit * (currentPage - 1);
-      setStartCell(!!music[row].notes[col]);
+      setStartCell(music[row].notes[col]);
     },
-    [music]
+    [music, pageUnit, currentPage]
   );
 
   const touchMoveHandler = (() => {
@@ -124,7 +125,7 @@ export default function Panel(): ReactElement {
         toggleCell([row, col], !startCell);
         lastTarget = currTarget;
       },
-      [startCell]
+      [music, pageUnit, currentPage]
     );
   })();
 
