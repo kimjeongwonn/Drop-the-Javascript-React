@@ -5,14 +5,12 @@ import { InstType, useMusic } from '../Contexts/MusicContext';
 export default function usePlay(): number {
   const timerId = useRef<number>();
   const { playing, beat, bpm, music } = useMusic();
-  const { audioContextRef, instDataRef } = useAudio();
+  const { audioContextRef, instDataRef, audioContextGainRef } = useAudio();
   const [playingCol, setPlayingCol] = useState<number>(0);
 
   function playAudio(col: number) {
     const playingInst: (keyof InstType)[] = [];
     const ctx = audioContextRef.current;
-    const gain = ctx.createGain();
-    gain.gain.value = 0.5;
 
     music.forEach(row => {
       if (row.show && row.notes[col]) {
@@ -24,15 +22,15 @@ export default function usePlay(): number {
       const insts = instDataRef.current;
       const node = ctx.createBufferSource();
       node.buffer = insts[inst];
-      node.connect(gain);
+      node.connect(audioContextGainRef.current);
       node.start();
       node.onended = function () {
         this.stop();
-        this.disconnect(gain);
+        this.disconnect(audioContextGainRef.current);
       };
     });
 
-    gain.connect(ctx.destination);
+    audioContextGainRef.current.connect(ctx.destination);
   }
 
   useEffect(() => {

@@ -30,6 +30,7 @@ const AudioContext = createContext<AudioContextInterface>(null);
 interface AudioContextInterface {
   audioContextRef: React.MutableRefObject<AudioContext>;
   instDataRef: React.MutableRefObject<InstType>;
+  audioContextGainRef: React.MutableRefObject<GainNode>;
 }
 
 interface Props {
@@ -51,11 +52,16 @@ export default function AudioProvider({ children }: Props): ReactElement {
   });
 
   const audioContextRef = useRef<AudioContext>(null);
+  const audioContextGainRef = useRef<GainNode>(null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    audioContextGainRef.current = audioContextRef.current.createGain();
+
+    audioContextGainRef.current.gain.value = 0.5;
+    console.log(audioContextGainRef.current);
     // console.log(audiosFetch);
     (async () => {
       try {
@@ -79,7 +85,8 @@ export default function AudioProvider({ children }: Props): ReactElement {
   const audioContextValue = useMemo<AudioContextInterface>(
     () => ({
       audioContextRef,
-      instDataRef
+      instDataRef,
+      audioContextGainRef
     }),
     []
   );
