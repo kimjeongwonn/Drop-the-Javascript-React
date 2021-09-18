@@ -51,6 +51,9 @@ export default function Stepper({
         <input
           onBlur={() => changeValue()}
           onChange={e => {
+            if (Number.isNaN(+e.target.value)) {
+              return;
+            }
             setInputValue(+e.target.value);
           }}
           value={inputValue}
