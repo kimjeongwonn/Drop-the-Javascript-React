@@ -24,10 +24,18 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  @include mobile {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .menu {
   display: flex;
   gap: 1rem;
   align-items: center;
+  @include mobile {
+    width: 100%;
+    justify-content: center;
+  }
 }
