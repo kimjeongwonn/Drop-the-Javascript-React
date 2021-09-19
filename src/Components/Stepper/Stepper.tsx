@@ -3,7 +3,7 @@ import Button from '../Button/Button';
 import styles from './Stepper.module.scss';
 import minusIconSrc from '../../Assets/Image/minus_icon.svg';
 import plusIconSrc from '../../Assets/Image/plus_icon.svg';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { SetStateType } from '../../Contexts/MusicContext';
 
 interface Props {
