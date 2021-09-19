@@ -2,6 +2,7 @@ const { merge } = require('webpack-merge');
 const commonConfig = require('./webpack.config.common');
 const path = require('path');
 const rootDir = process.cwd();
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = merge(commonConfig, {
   mode: 'production',
@@ -10,5 +11,6 @@ module.exports = merge(commonConfig, {
     path: path.resolve(rootDir, 'dist'),
     filename: '[name].[contenthash].bundle.js',
     chunkFilename: '[name].[contenthash].chunk.js'
-  }
+  },
+  plugins: [new BundleAnalyzerPlugin()]
 });
