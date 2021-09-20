@@ -24,16 +24,12 @@ module.exports = {
         use: ['babel-loader']
       },
       {
-        test: /\.(png|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif|wav)$/i,
         type: 'asset/resource'
       },
       {
         test: /\.svg$/i,
         use: ['@svgr/webpack', 'url-loader']
-      },
-      {
-        test: /\.wav/i,
-        use: ['url-loader']
       }
     ]
   },

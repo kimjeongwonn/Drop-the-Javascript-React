@@ -11,16 +11,19 @@ import { createPortal } from 'react-dom';
 
 import Loading from '../Components/Loading/Loading';
 import { InstName, InstType } from './MusicContext';
-const clapUrl = '/Sound/clap.wav';
-const closedHihatUrl = '/Sound/closed-hihat.wav';
-const cymbalUrl = '/Sound/cymbal.wav';
-const drumUrl = '/Sound/drum.wav';
-const highTomUrl = '/Sound/high-tom.wav';
-const kickUrl = '/Sound/kick.wav';
-const lowTomUrl = '/Sound/low-tom.wav';
-const openedHihatUrl = '/Sound/opened-hihat.wav';
-const rideUrl = '/Sound/ride.wav';
-const sidestickUrl = '/Sound/sidestick.wav';
+
+import clapUrl from '../Assets/Sound/clap.wav';
+import closedHihatUrl from '../Assets/Sound/closed-hihat.wav';
+import cymbalUrl from '../Assets/Sound/cymbal.wav';
+import drumUrl from '../Assets/Sound/drum.wav';
+import highTomUrl from '../Assets/Sound/high-tom.wav';
+import kickUrl from '../Assets/Sound/kick.wav';
+import lowTomUrl from '../Assets/Sound/low-tom.wav';
+import openedHihatUrl from '../Assets/Sound/opened-hihat.wav';
+import rideUrl from '../Assets/Sound/ride.wav';
+import sidestickUrl from '../Assets/Sound/sidestick.wav';
+
+console.log(clapUrl);
 
 const audiosFetch: Record<InstName, Promise<Response>> = {
   clap: fetch(clapUrl),
