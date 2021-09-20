@@ -13,14 +13,16 @@
 }
 
 body {
-  height: 100vh;
+  // height: 100vh;
   margin: 0;
   padding: 0;
-  touch-action: none;
+  @include mobile {
+    margin-bottom: 200px;
+  }
 }
 
 #root {
-  height: 100vh;
+  // height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
