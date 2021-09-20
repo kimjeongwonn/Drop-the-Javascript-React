@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect } from 'react';
+import Logo from '../Components/Logo/Logo';
 import Controller from '../Containers/Controller/Controller';
 import Panel from '../Containers/Panel/Panel';
 import { useAudio } from '../Contexts/AudioContext';
@@ -15,6 +16,7 @@ export default function App(): ReactElement {
 
   return (
     <>
+      <Logo />
       <Panel />
       <Controller />
     </>

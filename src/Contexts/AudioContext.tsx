@@ -106,8 +106,7 @@ export default function AudioProvider({ children }: Props): ReactElement {
 
   return (
     <AudioContext.Provider value={audioContextValue}>
-      {isLoading ? createPortal(<Loading />, document.getElementById('root')) : null}
-      {children}
+      {isLoading ? createPortal(<Loading />, document.getElementById('root')) : children}
     </AudioContext.Provider>
   );
 }
