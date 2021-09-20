@@ -23,6 +23,44 @@ export default function Controller(): ReactElement {
     setMusic(music.map(row => ({ ...row, notes: row.notes.fill(false) })));
   }, [music]);
 
+  const getFileFromState = useCallback(() => {
+    const blob = new window.Blob([JSON.stringify({ music, beat, bpm })], {
+      type: 'application/json'
+    });
+    const filename = 'DJS_' + new Date().toLocaleString() + '.json';
+    const url = window.URL.createObjectURL(blob);
+    console.log(url);
+    const aTag = document.createElement('a');
+    aTag.href = url;
+    aTag.download = filename;
+    aTag.click();
+    aTag.remove();
+    window.URL.revokeObjectURL(url);
+  }, []);
+
+  const getStateFromFile = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.click();
+    input.addEventListener('change', async () => {
+      if (input.files.item(0).type !== 'application/json') {
+        throw new Error('JSON 파일만 불러올 수 있습니다.');
+      }
+      try {
+        const loadedState = JSON.parse(await input.files.item(0).text());
+        if (!('beat' in loadedState && 'bpm' in loadedState && 'music' in loadedState)) {
+          throw new Error('정상적인 파일이 아닙니다!');
+        }
+        setBeat(loadedState.beat);
+        setBpm(loadedState.bpm);
+        setMusic(loadedState.music);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }, []);
+
   return (
     <section className={styles.controller}>
       <div className={styles.player}>
@@ -46,8 +84,8 @@ export default function Controller(): ReactElement {
           step={0.01}
           onChange={e => (audioContextGainRef.current.gain.value = +e.target.value)}
         />
-        <Button icon={saveIconSrc} size='md' />
-        <Button icon={loadIconSrc} size='md' />
+        <Button onClick={getFileFromState} icon={saveIconSrc} size='md' />
+        <Button onClick={getStateFromFile} icon={loadIconSrc} size='md' />
         <Button onClick={clearMusic} icon={clearIconSrc} size='md' />
       </div>
     </section>
