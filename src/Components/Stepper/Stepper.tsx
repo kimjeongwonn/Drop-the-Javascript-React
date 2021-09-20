@@ -62,9 +62,10 @@ export default function Stepper({
           onClick={() => changeValue((inputValue as number) - step)}
           size='sm'
           icon={minusIconSrc}
+          disabled={valueState <= min}
         />
         <input
-          onBlur={e => {
+          onBlur={() => {
             changValueDebounce(inputValue);
           }}
           onChange={e => {
@@ -89,6 +90,7 @@ export default function Stepper({
           onClick={() => changeValue((inputValue as number) + step)}
           size='sm'
           icon={plusIconSrc}
+          disabled={valueState >= max}
         />
       </div>
     </div>
