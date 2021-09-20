@@ -1,0 +1,10 @@
+@import 'defaultStyles';
+
+.logo {
+  width: 400px;
+  height: 100px;
+  @include mobile {
+    width: 200px;
+    height: 60px;
+  }
+}
