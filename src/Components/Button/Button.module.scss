@@ -45,4 +45,17 @@
   &:active {
     transform: scale(0.9);
   }
+
+  &:disabled {
+    background-color: transparent;
+    border: lightgray 1px solid;
+    cursor: initial;
+    transition: none;
+    &:hover {
+      filter: initial;
+    }
+    &:active {
+      transform: initial;
+    }
+  }
 }

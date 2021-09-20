@@ -7,14 +7,22 @@ interface Props {
   children?: ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
 }
 
-export default function Button({ onClick, children, icon, size = 'lg' }: Props): ReactElement {
+export default function Button({
+  onClick,
+  children,
+  icon,
+  size = 'lg',
+  disabled
+}: Props): ReactElement {
   return (
     <button
       onClick={onClick}
       className={cn(styles.button, styles[size])}
       style={{ backgroundImage: icon ? `url(${icon})` : null }}
+      disabled={disabled}
     >
       {children}
     </button>
