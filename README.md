@@ -2,12 +2,14 @@
 
 웹에서 동작하는 스텝시퀀서 어플리케이션 입니다.
 
+<div style='display: flex'>
 <img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=typescript&logoColor=white"/>
 <img alt="React" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=react&logoColor=black"/>
 <img alt="Sass" src ="https://img.shields.io/badge/Sass-CC6699.svg?&style=for-the-badge&logo=sass&logoColor=white"/>
 <img alt="Webpack" src ="https://img.shields.io/badge/Webpack-8DD6F9.svg?&style=for-the-badge&logo=webpack&logoColor=black"/>
 <img alt="Babel" src ="https://img.shields.io/badge/Babel-F9DC3E.svg?&style=for-the-badge&logo=babel&logoColor=black"/>
 <img alt="AudioContextAPI" src ="https://img.shields.io/badge/AudioContext--API-512BD4.svg?&style=for-the-badge&logo=&logoColor=white"/>
+</div>
 
 ## 개요
 
