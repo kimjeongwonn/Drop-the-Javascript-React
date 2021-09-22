@@ -44,6 +44,7 @@ interface AudioContextInterface {
   audioContextRef: React.MutableRefObject<AudioContext>;
   instDataRef: React.MutableRefObject<InstType>;
   audioContextGainRef: React.MutableRefObject<GainNode>;
+  audioAnalyserRef: React.MutableRefObject<AnalyserNode>;
 }
 
 interface Props {
@@ -65,15 +66,18 @@ export default function AudioProvider({ children }: Props): ReactElement {
     lowTom: null
   });
 
-  const audioContextRef = useRef<AudioContext>(null);
-  const audioContextGainRef = useRef<GainNode>(null);
-
-  useEffect(() => {
+  const audioContextRef = useRef<AudioContext>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    audioContextGainRef.current = audioContextRef.current.createGain();
+    new (window.AudioContext || window.webkitAudioContext)()
+  );
 
+  const audioContextGainRef = useRef<GainNode>(audioContextRef.current.createGain());
+  const audioAnalyserRef = useRef<AnalyserNode>(audioContextRef.current.createAnalyser());
+  audioContextGainRef.current.connect(audioAnalyserRef.current);
+  audioAnalyserRef.current.connect(audioContextRef.current.destination);
+
+  useEffect(() => {
     audioContextGainRef.current.gain.value = 0.5;
 
     (async () => {
@@ -99,7 +103,8 @@ export default function AudioProvider({ children }: Props): ReactElement {
     () => ({
       audioContextRef,
       instDataRef,
-      audioContextGainRef
+      audioContextGainRef,
+      audioAnalyserRef
     }),
     []
   );

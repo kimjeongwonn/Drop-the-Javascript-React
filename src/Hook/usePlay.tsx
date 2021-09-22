@@ -29,8 +29,6 @@ export default function usePlay(): number {
         this.disconnect(audioContextGainRef.current);
       };
     });
-
-    audioContextGainRef.current.connect(ctx.destination);
   }
 
   useEffect(() => {
