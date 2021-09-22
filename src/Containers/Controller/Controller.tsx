@@ -29,14 +29,13 @@ export default function Controller(): ReactElement {
     });
     const filename = 'DJS_' + new Date().toLocaleString() + '.json';
     const url = window.URL.createObjectURL(blob);
-    console.log(url);
     const aTag = document.createElement('a');
     aTag.href = url;
     aTag.download = filename;
     aTag.click();
     aTag.remove();
     window.URL.revokeObjectURL(url);
-  }, []);
+  }, [music, beat, bpm]);
 
   const getStateFromFile = useCallback(() => {
     const input = document.createElement('input');
@@ -57,6 +56,8 @@ export default function Controller(): ReactElement {
         setMusic(loadedState.music);
       } catch (e) {
         console.error(e);
+      } finally {
+        input.remove();
       }
     });
   }, []);
