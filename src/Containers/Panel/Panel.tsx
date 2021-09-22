@@ -88,7 +88,7 @@ export default function Panel(): ReactElement {
         }
       }
     },
-    [music, pageUnit, currentPage]
+    [music, pageUnit, currentPage, startCell]
   );
 
   const setStartHandler = useCallback<
@@ -125,7 +125,7 @@ export default function Panel(): ReactElement {
         toggleCell([row, col], !startCell);
         lastTarget = currTarget;
       },
-      [music, pageUnit, currentPage]
+      [music, pageUnit, currentPage, startCell]
     );
   })();
 
