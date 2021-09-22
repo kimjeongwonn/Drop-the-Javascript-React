@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState
 } from 'react';
-import useMobile from '../Hook/useMobile';
+import useView from '../Hook/useView';
 import { SetStateType, useMusic } from './MusicContext';
 
 interface PageContextInterface {
@@ -15,6 +15,8 @@ interface PageContextInterface {
   pageUnit: number;
   totalPage: number;
   currentPage: number;
+  viewHeight: number;
+  viewWidth: number;
   setCurrentPage: SetStateType<number>;
 }
 
@@ -26,7 +28,7 @@ interface Props {
 
 export default function PageProvider({ children }: Props): ReactElement {
   const { beat } = useMusic();
-  const isMobile = useMobile();
+  const { isMobile, viewHeight, viewWidth } = useView();
   const pageUnit = isMobile ? 8 : 16;
   const totalPage = Math.ceil(beat / pageUnit);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -43,9 +45,11 @@ export default function PageProvider({ children }: Props): ReactElement {
       pageUnit,
       totalPage,
       currentPage,
+      viewHeight,
+      viewWidth,
       setCurrentPage
     }),
-    [beat, currentPage, isMobile]
+    [beat, currentPage, isMobile, viewWidth, viewHeight]
   );
   return <PageContext.Provider value={contextValue}>{children}</PageContext.Provider>;
 }
