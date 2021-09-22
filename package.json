@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "webpack serve --config ./webpack/webpack.config.dev.js",
     "build": "webpack build --config ./webpack/webpack.config.prod.js",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://kimjeongwonn.github.io/drop-the-js-react",
+  "homepage": "https://kimjeongwonn.github.io/Drop-the-Javascript-React/",
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
