@@ -4,7 +4,7 @@ import App from './App/App';
 import AudioProvider from './Contexts/AudioContext';
 import MusicProvider from './Contexts/MusicContext';
 import PageProvider from './Contexts/PageContext';
-import './styles/global.scss';
+import './Styles/global.scss';
 
 ReactDOM.render(
   <React.StrictMode>
