@@ -16,6 +16,14 @@ export const viewSlice = createSlice({
       state.totalPage = Math.ceil(getState().music.beat / state.pageUnit);
     },
     setPage: (state, action: PayloadAction<number>) => {
+      if (action.payload < 1) {
+        state.currentPage = 1;
+        return;
+      }
+      if (action.payload > state.totalPage) {
+        state.currentPage = state.totalPage;
+        return;
+      }
       state.currentPage = action.payload;
     }
   }
