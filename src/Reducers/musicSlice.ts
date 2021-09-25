@@ -1,41 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { instInfo, InstName } from '../Data/instData';
-
-const INITIAL_BEAT = 16;
-const INITIAL_BPM = 150;
-const MAX_BPM = 500;
-const MIN_BPM = 50;
-const MAX_BEAT = 64;
-const MIN_BEAT = 2;
-const INITAIL_INST_COUNT = 5;
-
-interface MusicRow {
-  instName: InstName;
-  notes: boolean[];
-  show: boolean;
-}
-
-interface MusicState {
-  music: MusicRow[];
-  bpm: number;
-  playing: boolean;
-  beat: number;
-}
-
-const initialState: MusicState = {
-  music: Object.keys(instInfo).map((instName, idx) => ({
-    instName,
-    notes: Array(MAX_BEAT).fill(false),
-    show: idx < INITAIL_INST_COUNT
-  })),
-  bpm: INITIAL_BPM,
-  playing: false,
-  beat: INITIAL_BEAT
-};
+import { RootState } from '.';
+import { initialMusicState, MusicState } from './initialStore';
 
 export const musicSlice = createSlice({
   name: 'music',
-  initialState,
+  initialState: initialMusicState,
   reducers: {
     togglePlaying: state => {
       state.playing = !state.playing;
@@ -64,9 +33,10 @@ export const musicSlice = createSlice({
 export const { changeBeat, changeBpm, toggleInstShowing, toggleMusicCell, togglePlaying } =
   musicSlice.actions;
 
-export const selectBeat = (state: MusicState): number => state.beat;
-export const selectBpm = (state: MusicState): number => state.bpm;
-export const selectMusic = (state: MusicState): MusicRow[] => state.music;
-export const selectPlaying = (state: MusicState): boolean => state.playing;
+export const selectBeat = (state: RootState): number => state.music.beat;
+export const selectBpm = (state: RootState): number => state.music.bpm;
+export const selectMusic = (state: RootState): MusicState['music'] => state.music.music;
+export const selectPlaying = (state: RootState): boolean => state.music.playing;
 
-export default musicSlice.reducer;
+const musicReducer = musicSlice.reducer;
+export default musicReducer;
