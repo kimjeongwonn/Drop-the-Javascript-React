@@ -1,51 +1,16 @@
-import React, {
-  createContext,
-  ReactElement,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { ReactElement, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-
 import Loading from '../Components/Loading/Loading';
-import { InstName, InstType } from './MusicContext';
-
-import clapUrl from '../Assets/Sound/clap.wav';
-import closedHihatUrl from '../Assets/Sound/closed-hihat.wav';
-import cymbalUrl from '../Assets/Sound/cymbal.wav';
-import drumUrl from '../Assets/Sound/drum.wav';
-import highTomUrl from '../Assets/Sound/high-tom.wav';
-import kickUrl from '../Assets/Sound/kick.wav';
-import lowTomUrl from '../Assets/Sound/low-tom.wav';
-import openedHihatUrl from '../Assets/Sound/opened-hihat.wav';
-import rideUrl from '../Assets/Sound/ride.wav';
-import sidestickUrl from '../Assets/Sound/sidestick.wav';
-
-console.log(clapUrl);
-
-const audiosFetch: Record<InstName, Promise<Response>> = {
-  clap: fetch(clapUrl),
-  closedHihat: fetch(closedHihatUrl),
-  cymbal: fetch(cymbalUrl),
-  drum: fetch(drumUrl),
-  highTom: fetch(highTomUrl),
-  kick: fetch(kickUrl),
-  lowTom: fetch(lowTomUrl),
-  openedHihat: fetch(openedHihatUrl),
-  ride: fetch(rideUrl),
-  sideStick: fetch(sidestickUrl)
-};
-
-const AudioContext = createContext<AudioContextInterface>(null);
+import { instInfo, InstNameUnion } from '../Data/instData';
 
 interface AudioContextInterface {
-  audioContextRef: React.MutableRefObject<AudioContext>;
-  instDataRef: React.MutableRefObject<InstType>;
-  audioContextGainRef: React.MutableRefObject<GainNode>;
-  audioAnalyserRef: React.MutableRefObject<AnalyserNode>;
+  audioContext: AudioContext;
+  instAudioBuffers: Record<InstNameUnion, AudioBuffer>;
+  audioContextGain: GainNode;
+  audioAnalyser: AnalyserNode;
 }
+
+const AudioContext = React.createContext<AudioContextInterface>(null);
 
 interface Props {
   children: React.ReactNode;
@@ -53,43 +18,43 @@ interface Props {
 
 export default function AudioProvider({ children }: Props): ReactElement {
   const [isLoading, setIsLoading] = useState(true);
-  const instDataRef = useRef<InstType>({
-    drum: null,
-    sideStick: null,
-    cymbal: null,
-    openedHihat: null,
-    clap: null,
-    closedHihat: null,
-    ride: null,
-    kick: null,
-    highTom: null,
-    lowTom: null
-  });
-
   const audioContextRef = useRef<AudioContext>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     new (window.AudioContext || window.webkitAudioContext)()
   );
-
   const audioContextGainRef = useRef<GainNode>(audioContextRef.current.createGain());
   const audioAnalyserRef = useRef<AnalyserNode>(audioContextRef.current.createAnalyser());
   audioContextGainRef.current.connect(audioAnalyserRef.current);
   audioAnalyserRef.current.connect(audioContextRef.current.destination);
 
+  const instAudioBuffers = useRef<Record<InstNameUnion, AudioBuffer>>();
+
   useEffect(() => {
     audioContextGainRef.current.gain.value = 0.5;
+    const instPromiseArray: Partial<Record<InstNameUnion, Promise<Response>>> = {};
+    for (const instName in instInfo) {
+      instPromiseArray[instName as InstNameUnion] = fetch(
+        instInfo[instName as InstNameUnion].wavUrl
+      );
+    }
 
     (async () => {
       try {
-        const list = await Promise.all(Object.values(audiosFetch));
-        const arrayBufferList = await Promise.all<ArrayBuffer>(list.map(r => r.arrayBuffer()));
-        const audioBufferList = await Promise.all<AudioBuffer>(
-          arrayBufferList.map(a => audioContextRef.current.decodeAudioData(a))
+        const instNameArray = Object.keys(instPromiseArray) as InstNameUnion[];
+        const instBufferArray = Object.values(instPromiseArray);
+        const promiseList = await Promise.all(instBufferArray);
+
+        const arrayBufferList = await Promise.all<ArrayBuffer>(
+          promiseList.map(fetchPromise => fetchPromise.arrayBuffer())
         );
+
+        const audioBufferList = await Promise.all<AudioBuffer>(
+          arrayBufferList.map(arrayBuffer => audioContextRef.current.decodeAudioData(arrayBuffer))
+        );
+
         audioBufferList.forEach(
-          (value, index) =>
-            (instDataRef.current[Object.keys(audiosFetch)[index] as keyof InstType] = value)
+          (value, index) => (instAudioBuffers.current[instNameArray[index]] = value)
         );
       } catch (e) {
         console.error(e);
@@ -101,10 +66,10 @@ export default function AudioProvider({ children }: Props): ReactElement {
 
   const audioContextValue = useMemo<AudioContextInterface>(
     () => ({
-      audioContextRef,
-      instDataRef,
-      audioContextGainRef,
-      audioAnalyserRef
+      audioContext: audioContextRef.current,
+      instAudioBuffers: instAudioBuffers.current,
+      audioContextGain: audioContextGainRef.current,
+      audioAnalyser: audioAnalyserRef.current
     }),
     []
   );
