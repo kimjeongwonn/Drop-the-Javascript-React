@@ -21,25 +21,28 @@ import rideWavUrl from '../Assets/Sound/ride.wav';
 import sidestickWavUrl from '../Assets/Sound/sidestick.wav';
 
 interface InstData {
-  instName: string;
   wavUrl: string;
   SvgIcon: React.ReactNode;
 }
 
-export const instInfo: InstData[] = [
-  { instName: 'Drum', wavUrl: drumWavUrl, SvgIcon: DrumIcon },
-  { instName: 'Kick', wavUrl: kickWavUrl, SvgIcon: KickIcon },
-  { instName: 'High Tom', wavUrl: highTomWavUrl, SvgIcon: HightomIcon },
-  { instName: 'Low Tom', wavUrl: lowTomWavUrl, SvgIcon: LowtomIcon },
-  { instName: 'Ride', wavUrl: rideWavUrl, SvgIcon: RideIcon },
-  { instName: 'Clap', wavUrl: clapWavUrl, SvgIcon: ClapIcon },
-  { instName: 'Closed Hihat', wavUrl: closedHihatWavUrl, SvgIcon: ClosedHihatIcon },
-  { instName: 'Opened Hihat', wavUrl: openedHihatWavUrl, SvgIcon: OpenedHihatIcon },
-  { instName: 'Cymbal', wavUrl: cymbalWavUrl, SvgIcon: CymbalIcon },
-  { instName: 'Side Stick', wavUrl: sidestickWavUrl, SvgIcon: SidestickIcon }
-];
+interface InstInfo {
+  [key: string]: InstData;
+}
 
-export type InstName = keyof typeof instInfo;
+export const instInfo: InstInfo = {
+  drum: { wavUrl: drumWavUrl, SvgIcon: DrumIcon },
+  kick: { wavUrl: kickWavUrl, SvgIcon: KickIcon },
+  highTom: { wavUrl: highTomWavUrl, SvgIcon: HightomIcon },
+  lowTom: { wavUrl: lowTomWavUrl, SvgIcon: LowtomIcon },
+  ride: { wavUrl: rideWavUrl, SvgIcon: RideIcon },
+  clap: { wavUrl: clapWavUrl, SvgIcon: ClapIcon },
+  closedHihat: { wavUrl: closedHihatWavUrl, SvgIcon: ClosedHihatIcon },
+  openedHihat: { wavUrl: openedHihatWavUrl, SvgIcon: OpenedHihatIcon },
+  cymbal: { wavUrl: cymbalWavUrl, SvgIcon: CymbalIcon },
+  sideStick: { wavUrl: sidestickWavUrl, SvgIcon: SidestickIcon }
+};
+
+export type InstName = keyof InstInfo;
 
 export type InstAudio = Record<InstName, null | AudioBuffer>;
 export type InstIcon = Record<InstName, React.FC<React.SVGProps<SVGSVGElement>>>;
