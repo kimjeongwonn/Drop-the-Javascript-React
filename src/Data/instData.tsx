@@ -25,11 +25,7 @@ interface InstData {
   SvgIcon: React.ReactNode;
 }
 
-interface InstInfo {
-  [key: string]: InstData;
-}
-
-export const instInfo: InstInfo = {
+export const instInfo = {
   drum: { wavUrl: drumWavUrl, SvgIcon: DrumIcon },
   kick: { wavUrl: kickWavUrl, SvgIcon: KickIcon },
   highTom: { wavUrl: highTomWavUrl, SvgIcon: HightomIcon },
@@ -42,7 +38,8 @@ export const instInfo: InstInfo = {
   sideStick: { wavUrl: sidestickWavUrl, SvgIcon: SidestickIcon }
 };
 
-export type InstName = keyof InstInfo;
+export type InstNameUnion = keyof typeof instInfo;
 
-export type InstAudio = Record<InstName, null | AudioBuffer>;
-export type InstIcon = Record<InstName, React.FC<React.SVGProps<SVGSVGElement>>>;
+export type InstInfo = Record<InstNameUnion, InstData>;
+
+export type InstIcon = Record<InstNameUnion, React.FC<React.SVGProps<SVGSVGElement>>>;
