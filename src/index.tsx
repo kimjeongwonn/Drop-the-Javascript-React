@@ -1,20 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import App from './App/App';
 import AudioProvider from './Contexts/AudioContext';
-import MusicProvider from './Contexts/MusicContext';
-import PageProvider from './Contexts/PageContext';
+import { store } from './Reducers';
 import './Styles/global.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <MusicProvider>
+    <Provider store={store}>
       <AudioProvider>
-        <PageProvider>
-          <App />
-        </PageProvider>
+        <App />
       </AudioProvider>
-    </MusicProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
