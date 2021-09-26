@@ -5,7 +5,7 @@ import { instInfo, InstNameUnion } from '../Data/instData';
 
 interface AudioContextInterface {
   audioContext: AudioContext;
-  instAudioBuffers: Record<InstNameUnion, AudioBuffer>;
+  instAudioBuffers: Partial<Record<InstNameUnion, AudioBuffer>>;
   audioContextGain: GainNode;
   audioAnalyser: AnalyserNode;
 }
@@ -28,7 +28,7 @@ export default function AudioProvider({ children }: Props): ReactElement {
   audioContextGainRef.current.connect(audioAnalyserRef.current);
   audioAnalyserRef.current.connect(audioContextRef.current.destination);
 
-  const instAudioBuffers = useRef<Record<InstNameUnion, AudioBuffer>>();
+  const instAudioBuffers = useRef<Partial<Record<InstNameUnion, AudioBuffer>>>({});
 
   useEffect(() => {
     audioContextGainRef.current.gain.value = 0.5;
