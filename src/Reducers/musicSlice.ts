@@ -6,32 +6,59 @@ export const musicSlice = createSlice({
   name: 'music',
   initialState: initialMusicState,
   reducers: {
+    setMusic: (state, action: PayloadAction<MusicState['music']>) => {
+      state.music = action.payload;
+      window.sessionStorage.setItem('music', JSON.stringify(state.music));
+    },
+
+    clearMusic: state => {
+      state.music.map(row => {
+        return row.notes.fill(false);
+      });
+      window.sessionStorage.setItem('music', JSON.stringify(state.music));
+    },
+
     togglePlaying: state => {
       state.playing = !state.playing;
     },
-    toggleMusicCell: (state, action: PayloadAction<[number, number]>) => {
-      state.music[action.payload[0]].notes[action.payload[1]] =
-        !state.music[action.payload[0]].notes[action.payload[1]];
+    toggleMusicCell: (state, action: PayloadAction<{ pos: [number, number]; force?: boolean }>) => {
+      const { pos, force } = action.payload;
+      state.music[pos[0]].notes[pos[1]] = force ?? !state.music[pos[0]].notes[pos[1]];
+      window.sessionStorage.setItem('music', JSON.stringify(state.music));
     },
     toggleInstShowing: (state, action: PayloadAction<string>) => {
-      state.music = state.music.map(row => {
+      if (
+        state.music.filter(row => row.instName !== action.payload).every(row => row.show === false)
+      ) {
+        return;
+      }
+      state.music.map(row => {
         if (row.instName === action.payload) {
           row.show = !row.show;
         }
-        return row;
       });
+      window.sessionStorage.setItem('music', JSON.stringify(state.music));
     },
     changeBeat: (state, action: PayloadAction<number>) => {
       state.beat = action.payload;
+      window.sessionStorage.setItem('beat', action.payload.toString());
     },
     changeBpm: (state, action: PayloadAction<number>) => {
       state.bpm = action.payload;
+      window.sessionStorage.setItem('bpm', action.payload.toString());
     }
   }
 });
 
-export const { changeBeat, changeBpm, toggleInstShowing, toggleMusicCell, togglePlaying } =
-  musicSlice.actions;
+export const {
+  setMusic,
+  clearMusic,
+  changeBeat,
+  changeBpm,
+  toggleInstShowing,
+  toggleMusicCell,
+  togglePlaying
+} = musicSlice.actions;
 
 export const selectBeat = (state: RootState): number => state.music.beat;
 export const selectBpm = (state: RootState): number => state.music.bpm;
