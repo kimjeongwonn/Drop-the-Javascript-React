@@ -15,8 +15,8 @@ export interface MusicState {
   beat: number;
 }
 
-const INITIAL_BEAT = +window.sessionStorage.getItem('beat') ?? 16;
-const INITIAL_BPM = +window.sessionStorage.getItem('bpm') ?? 150;
+const INITIAL_BEAT = +(window.sessionStorage.getItem('beat') ?? 16);
+const INITIAL_BPM = +(window.sessionStorage.getItem('bpm') ?? 150);
 const MAX_BPM = 500;
 const MIN_BPM = 50;
 const MAX_BEAT = 64;
