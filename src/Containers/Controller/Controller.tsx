@@ -8,20 +8,44 @@ import Button from '../../Components/Button/Button';
 import Slider from '../../Components/Slider/Slider';
 import Stepper from '../../Components/Stepper/Stepper';
 import { useAudio } from '../../Contexts/AudioContext';
-import { useMusic } from '../../Contexts/MusicContext';
+import { useAppDispatch, useAppSelector } from '../../Hook/useReducer';
+import { MusicState, MUSIC_CONSTANCE } from '../../Reducers/initialStore';
+import {
+  changeBeat,
+  changeBpm,
+  clearMusic as clearMusicAction,
+  selectBeat,
+  selectBpm,
+  selectMusic,
+  selectPlaying,
+  setMusic as setMusicAction,
+  togglePlaying as togglePlayingAction
+} from '../../Reducers/musicSlice';
 import styles from './Controller.module.scss';
 
 export default function Controller(): ReactElement {
-  const { setPlaying, playing, beat, bpm, setBpm, setBeat, setMusic, music } = useMusic();
-  const { audioContextGainRef } = useAudio();
+  const dispatch = useAppDispatch();
 
-  const togglePlaying = useCallback(() => {
-    setPlaying(!playing);
-  }, [playing]);
+  const playing = useAppSelector(selectPlaying);
+  const music = useAppSelector(selectMusic);
+  const beat = useAppSelector(selectBeat);
+  const bpm = useAppSelector(selectBpm);
 
-  const clearMusic = useCallback(() => {
-    setMusic(music.map(row => ({ ...row, notes: row.notes.fill(false) })));
-  }, [music]);
+  const { audioContextGain } = useAudio();
+
+  const togglePlaying = useCallback(() => dispatch(togglePlayingAction()), []);
+  const clearMusic = useCallback(() => dispatch(clearMusicAction()), []);
+  const onChangeVolume: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    e => (audioContextGain.gain.value = +e.target.value),
+    []
+  );
+
+  const setBeat = useCallback((newBeat: number) => dispatch(changeBeat(newBeat)), []);
+  const setBpm = useCallback((newBpm: number) => dispatch(changeBpm(newBpm)), []);
+  const setMusic = useCallback(
+    (newMusic: MusicState['music']) => dispatch(setMusicAction(newMusic)),
+    []
+  );
 
   const getFileFromState = useCallback(() => {
     const blob = new window.Blob([JSON.stringify({ music, beat, bpm })], {
@@ -62,29 +86,32 @@ export default function Controller(): ReactElement {
     });
   }, []);
 
+  const { MAX_BEAT, MAX_BPM, MIN_BEAT, MIN_BPM } = MUSIC_CONSTANCE;
+
   return (
     <section className={styles.controller}>
       <div className={styles.player}>
         <Button onClick={togglePlaying} icon={playing ? stopIconSrc : playIconSrc} />
-        <Stepper valueState={beat} setValueState={setBeat} step={1} min={2} max={32} label='Beat' />
+        <Stepper
+          valueState={beat}
+          setValueState={setBeat}
+          step={1}
+          min={MIN_BEAT}
+          max={MAX_BEAT}
+          label='Beat'
+        />
         <Stepper
           valueState={bpm}
           setValueState={setBpm}
           step={10}
-          min={100}
-          max={500}
+          min={MIN_BPM}
+          max={MAX_BPM}
           label='BPM'
           debounceDelay={1000}
         />
       </div>
       <div className={styles.menu}>
-        <Slider
-          initialValue={0.5}
-          min={0}
-          max={1}
-          step={0.01}
-          onChange={e => (audioContextGainRef.current.gain.value = +e.target.value)}
-        />
+        <Slider initialValue={0.5} min={0} max={1} step={0.01} onChange={onChangeVolume} />
         <Button onClick={getFileFromState} icon={saveIconSrc} size='md' />
         <Button onClick={getStateFromFile} icon={loadIconSrc} size='md' />
         <Button onClick={clearMusic} icon={clearIconSrc} size='md' />
