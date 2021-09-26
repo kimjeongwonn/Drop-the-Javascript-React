@@ -1,13 +1,12 @@
+import debounce from 'lodash/debounce';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import Button from '../Button/Button';
-import styles from './Stepper.module.scss';
 import minusIconSrc from '../../Assets/Image/minus_icon.svg';
 import plusIconSrc from '../../Assets/Image/plus_icon.svg';
-import debounce from 'lodash/debounce';
-import { SetStateType } from '../../Contexts/MusicContext';
+import Button from '../Button/Button';
+import styles from './Stepper.module.scss';
 
 interface Props {
-  setValueState: SetStateType<number>;
+  setValueState: (s: number) => void;
   valueState: number;
   step?: number;
   min?: number;
@@ -16,7 +15,7 @@ interface Props {
   debounceDelay: number;
 }
 
-export default function Stepper({
+function Stepper({
   setValueState,
   valueState,
   step,
@@ -104,3 +103,5 @@ Stepper.defaultProps = {
   label: '',
   debounceDelay: 500
 };
+
+export default React.memo(Stepper);

@@ -10,13 +10,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function Button({
-  onClick,
-  children,
-  icon,
-  size = 'lg',
-  disabled
-}: Props): ReactElement {
+function Button({ onClick, children, icon, size = 'lg', disabled }: Props): ReactElement {
   return (
     <button
       onClick={onClick}
@@ -28,3 +22,5 @@ export default function Button({
     </button>
   );
 }
+
+export default React.memo(Button);
