@@ -15,8 +15,8 @@ export interface MusicState {
   beat: number;
 }
 
-const INITIAL_BEAT = 16;
-const INITIAL_BPM = 150;
+const INITIAL_BEAT = +window.sessionStorage.getItem('beat') ?? 16;
+const INITIAL_BPM = +window.sessionStorage.getItem('bpm') ?? 150;
 const MAX_BPM = 500;
 const MIN_BPM = 50;
 const MAX_BEAT = 64;
@@ -34,11 +34,13 @@ export const MUSIC_CONSTANCE = {
 };
 
 export const initialMusicState: MusicState = {
-  music: Object.keys(instInfo).map((instName: InstNameUnion, idx) => ({
-    instName,
-    notes: Array(MAX_BEAT).fill(false),
-    show: idx < INITIAL_INST_COUNT
-  })),
+  music:
+    JSON.parse(window.sessionStorage.getItem('music')) ??
+    Object.keys(instInfo).map((instName: InstNameUnion, idx) => ({
+      instName,
+      notes: Array(MAX_BEAT).fill(false),
+      show: idx < INITIAL_INST_COUNT
+    })),
   bpm: INITIAL_BPM,
   playing: false,
   beat: INITIAL_BEAT
