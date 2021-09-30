@@ -4,29 +4,26 @@ import Logo from '../Components/Logo/Logo';
 import Controller from '../Containers/Controller/Controller';
 import Panel from '../Containers/Panel/Panel';
 import { useAudio } from '../Contexts/AudioContext';
-import { useMusic } from '../Contexts/MusicContext';
-import { usePage } from '../Contexts/PageContext';
+import { useAppSelector } from '../Hook/useReducer';
+import { selectPlaying } from '../Reducers/musicSlice';
 
 export default function App(): ReactElement {
-  const { audioAnalyserRef, audioContextRef } = useAudio();
-  const { viewHeight, viewWidth } = usePage();
-  const { playing } = useMusic();
+  const { audioContext, audioAnalyser } = useAudio();
+  const playing = useAppSelector(selectPlaying);
 
   useEffect(() => {
     window.addEventListener('click', function audioContextInit() {
-      audioContextRef.current.resume();
+      audioContext.resume();
       window.removeEventListener('click', audioContextInit);
     });
-  });
+  }, []);
 
   return (
     <>
       <Logo />
       <Panel />
       <Controller />
-      {playing ? (
-        <AudioVisualizer analyserRef={audioAnalyserRef} width={viewWidth} height={viewHeight} />
-      ) : null}
+      {playing ? <AudioVisualizer analyser={audioAnalyser} /> : null}
     </>
   );
 }

@@ -1,48 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import cn from 'classnames';
 import React, { ReactElement, useCallback } from 'react';
-import { SetStateType } from '../../Contexts/MusicContext';
 import styles from './Selector.module.scss';
 
 interface Props {
   namePropName: string;
   togglePropName: string;
+  iconPropName: string;
   listState: any[];
-  setListState: SetStateType<any[]>;
-  iconSet: {
-    [key: string]: React.FC<React.SVGProps<SVGSVGElement>>;
-  };
+  listInfo: { [key: string]: any };
+  onToggle: (instName: string) => void;
   nameConvertor?: (s: string) => string;
 }
 
 export default function Selector({
   namePropName,
-  togglePropName: togglePropName,
+  togglePropName,
+  iconPropName,
   listState,
-  setListState,
-  iconSet,
+  listInfo,
+  onToggle,
   nameConvertor
 }: Props): ReactElement {
-  const toggleHandler = useCallback(
-    (toggleName: string) => {
-      const newState = listState.map(listItem => {
-        if (listItem[namePropName] === toggleName) {
-          return { ...listItem, [togglePropName]: !listItem[togglePropName] };
-        }
-        return { ...listItem };
-      });
-      if (!newState.some(listItem => listItem[togglePropName])) return;
-      setListState(newState);
-    },
-    [namePropName, togglePropName, listState]
-  );
+  const toggleHandler = useCallback(toggleItemName => onToggle(toggleItemName), []);
 
   return (
     <div className={styles.container}>
       <ul className={cn(styles.list, 'selector')}>
         {listState.map(item => {
           const itemName = nameConvertor?.(item[namePropName]) ?? item[namePropName];
-          const ItemIcon = iconSet[item[namePropName]];
+          const ItemIcon = listInfo[item[namePropName]][iconPropName];
           const checked = item[togglePropName];
           return (
             <li

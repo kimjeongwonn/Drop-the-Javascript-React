@@ -9,7 +9,7 @@ interface Props {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-export default function Slider({ onChange, initialValue, ...args }: Props): ReactElement {
+function Slider({ onChange, initialValue, ...args }: Props): ReactElement {
   const [rangeValue, setRangeValue] = useState<number>(initialValue);
   const onChangeHandler = useCallback<React.ChangeEventHandler<HTMLInputElement>>(e => {
     setRangeValue(+e.target.value);
@@ -32,3 +32,5 @@ Slider.defaultProps = {
   min: 0,
   step: 1
 };
+
+export default React.memo(Slider);

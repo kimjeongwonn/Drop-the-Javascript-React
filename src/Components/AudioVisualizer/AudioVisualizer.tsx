@@ -1,15 +1,18 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
+import { useAppSelector } from '../../Hook/useReducer';
+import { selectViewHeight, selectViewWidth } from '../../Reducers/viewSlice';
 import styles from './AudioVisualizer.module.scss';
 
 interface Props {
-  analyserRef: React.MutableRefObject<AnalyserNode>;
+  analyser: AnalyserNode;
   showCondition?: boolean;
   width?: number;
   height?: number;
 }
 
-export default function AudioVisualizer({ analyserRef, width, height }: Props): ReactElement {
-  const { current: analyser } = analyserRef;
+export default function AudioVisualizer({ analyser }: Props): ReactElement {
+  const width = useAppSelector(selectViewWidth);
+  const height = useAppSelector(selectViewHeight);
   const canvasRef: { current: HTMLCanvasElement } = useRef(null);
   analyser.fftSize = 256;
   const bufferLength = analyser.frequencyBinCount;

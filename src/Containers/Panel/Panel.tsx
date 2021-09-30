@@ -1,13 +1,28 @@
 import cn from 'classnames';
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ReactComponent as AdjustSvg } from '../../Assets/Image/adjust_icon.svg';
 import Cell, { cellColors } from '../../Components/Cell/Cell';
 import Selector from '../../Components/Selector/Selector';
 import Stepper from '../../Components/Stepper/Stepper';
-import { useMusic } from '../../Contexts/MusicContext';
-import { usePage } from '../../Contexts/PageContext';
+import { instInfo } from '../../Data/instData';
 import usePlay from '../../Hook/usePlay';
+import { useAppDispatch, useAppSelector } from '../../Hook/useReducer';
+import {
+  selectBeat,
+  selectBpm,
+  selectMusic,
+  selectPlaying,
+  toggleInstShowing,
+  toggleMusicCell
+} from '../../Reducers/musicSlice';
+import {
+  selectCurrentPage,
+  selectPageUnit,
+  selectTotalPage,
+  setPage,
+  setView
+} from '../../Reducers/viewSlice';
 import styles from './Panel.module.scss';
 
 const INST_COLORS: cellColors[] = [
@@ -30,19 +45,41 @@ interface ElementWithDataSet extends Element {
 }
 
 export default function Panel(): ReactElement {
-  const { music, setMusic, playing, beat, icons } = useMusic();
   const [startCell, setStartCell] = useState<boolean>(false);
   const [openSelector, setOpenSelector] = useState<boolean>(false);
-  const { pageUnit, currentPage, totalPage, setCurrentPage } = usePage();
+  const dispatch = useAppDispatch();
 
-  const playingCol = usePlay();
+  const playing = useAppSelector(selectPlaying);
+  const music = useAppSelector(selectMusic);
+  const beat = useAppSelector(selectBeat);
+  const bpm = useAppSelector(selectBpm);
+
+  const pageUnit = useAppSelector(selectPageUnit);
+  const totalPage = useAppSelector(selectTotalPage);
+  const currentPage = useAppSelector(selectCurrentPage);
+  const changePageDispatch = useCallback((newPage: number) => dispatch(setPage(newPage)), []);
+
+  const playingCol = usePlay(music, playing, beat, bpm);
+  const currentPlayingPage = ~~(playingCol / pageUnit) + 1;
+
+  useEffect(() => {
+    dispatch(setView({ width: window.innerWidth, height: window.innerHeight, currentBeat: beat }));
+    function resizeHandler() {
+      dispatch(
+        setView({ width: window.innerWidth, height: window.innerHeight, currentBeat: beat })
+      );
+    }
+    window.addEventListener('resize', resizeHandler);
+    return () => {
+      window.removeEventListener('resize', resizeHandler);
+    };
+  }, [beat]);
 
   useEffect(() => {
     if (playing) {
-      const willMovePage = ~~(playingCol / pageUnit) + 1;
-      setCurrentPage(willMovePage);
+      changePageDispatch(currentPlayingPage);
     }
-  }, [playing, playingCol, pageUnit]);
+  }, [currentPlayingPage, playing]);
 
   useEffect(() => {
     if (openSelector) {
@@ -66,15 +103,8 @@ export default function Panel(): ReactElement {
     }
   }, [openSelector]);
 
-  const toggleCell = useCallback(
-    (pos, force?) => {
-      const newMusic = [...music];
-
-      newMusic[pos[0]].notes[pos[1]] = force ?? !newMusic[pos[0]].notes[pos[1]];
-      setMusic(newMusic);
-    },
-    [music]
-  );
+  const toggleCell = (pos: [number, number], force?: boolean) =>
+    dispatch(toggleMusicCell({ pos, force }));
 
   const toggleHandler: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
@@ -111,10 +141,11 @@ export default function Panel(): ReactElement {
     [music, pageUnit, currentPage]
   );
 
-  const touchMoveHandler = (() => {
-    let lastTarget: Element | null = null;
-    return useCallback<React.TouchEventHandler>(
-      e => {
+  /* lastTarget과 currTarget을 비교하여 같은 Cell 안에서 move이벤트가 발생해도 무시해줌 */
+  const touchMoveHandler = useCallback<React.TouchEventHandler>(
+    ((): React.TouchEventHandler => {
+      let lastTarget: Element | null = null;
+      return e => {
         const { clientX, clientY } = e.touches[0];
         const currTarget = document
           .elementFromPoint(clientX, clientY)
@@ -124,10 +155,15 @@ export default function Panel(): ReactElement {
         const col = +currTarget.dataset.posCol + pageUnit * (currentPage - 1);
         toggleCell([row, col], !startCell);
         lastTarget = currTarget;
-      },
-      [music, pageUnit, currentPage, startCell]
-    );
-  })();
+      };
+    })(),
+    [startCell]
+  );
+
+  const toggleInstShowingDispatch = useCallback(
+    instName => dispatch(toggleInstShowing(instName)),
+    []
+  );
 
   const convertCamelCaseToUpperCaseWithSpace = useCallback(
     (preName: string) => preName.replace(/([A-Z])/g, ' $1').toUpperCase(),
@@ -141,7 +177,7 @@ export default function Panel(): ReactElement {
         max={totalPage}
         step={1}
         valueState={currentPage}
-        setValueState={setCurrentPage}
+        setValueState={changePageDispatch}
       />
       <div
         className={styles.panel}
@@ -153,15 +189,15 @@ export default function Panel(): ReactElement {
         onMouseDown={setStartHandler as React.MouseEventHandler<HTMLDivElement>}
         onFocus={setStartHandler as React.FocusEventHandler<HTMLDivElement>}
       >
-        {music.map(({ notes, inst, show }, rowIndex) => {
-          const SvgIcon = icons[inst];
+        {music.map(({ notes, instName, show }, rowIndex) => {
+          const SvgIcon = instInfo[instName].SvgIcon;
           const activatedNotes = notes.slice(0, beat);
           const pagedNotes = activatedNotes.slice(
             pageUnit * (currentPage - 1),
             pageUnit * currentPage
           );
           return show ? (
-            <div role='grid' key={inst} className={styles.panelLine}>
+            <div role='grid' key={instName} className={styles.panelLine}>
               <SvgIcon
                 className={cn(styles.svgIcon, styles[INST_COLORS[rowIndex]])}
                 viewBox='0 0 45 45'
@@ -192,12 +228,13 @@ export default function Panel(): ReactElement {
       {openSelector
         ? createPortal(
             <Selector
-              namePropName='inst'
+              namePropName='instName'
               togglePropName='show'
+              iconPropName='SvgIcon'
               listState={music}
-              iconSet={icons}
+              listInfo={instInfo}
               nameConvertor={convertCamelCaseToUpperCaseWithSpace}
-              setListState={setMusic}
+              onToggle={toggleInstShowingDispatch}
             />,
             document.getElementById('root')
           )
