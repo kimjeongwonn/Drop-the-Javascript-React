@@ -157,7 +157,7 @@ export default function Panel(): ReactElement {
         lastTarget = currTarget;
       };
     })(),
-    [startCell]
+    [startCell, currentPage]
   );
 
   const toggleInstShowingDispatch = useCallback(
