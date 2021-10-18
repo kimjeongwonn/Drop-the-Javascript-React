@@ -43,7 +43,8 @@ export default function AudioVisualizer({ analyser }: Props): ReactElement {
         cancelAnimationFrame(animationId);
       };
     }
-    draw();
+    const cancelDraw = draw();
+    return () => cancelDraw();
   }, [WIDTH, HEIGHT]);
 
   return <canvas className={styles.canvas} ref={canvasRef}></canvas>;
