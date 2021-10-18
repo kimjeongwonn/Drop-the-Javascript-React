@@ -11,6 +11,9 @@
 <img alt="AudioContextAPI" src ="https://img.shields.io/badge/AudioContext--API-512BD4.svg?&style=for-the-badge&logo=&logoColor=white"/>
 </div>
 
+### 개발일지
+[https://github.com/kimjeongwonn/Drop-the-Javascript-React/wiki](https://github.com/kimjeongwonn/Drop-the-Javascript-React/wiki)
+
 ## 개요
 
 Drop The Javascript는 드럼 비트를 기반으로 하는 스텝시퀀서 어플리케이션입니다. 원하는 박자에 원하는 악기를 토글하여 간단하게 드럼 비트를 제작할 수 있도록 해주며, 완성한 비트는 별도의 JSON파일로 내보내고 다시 불러올 수 있습니다.
